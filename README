@@ -31,7 +31,7 @@ v 2.2.0
 - GameView allows to display DebugTexts as well
 - Example agents moved to separate project PacMan-vs-Ghosts-Agents
 - Direction enum created
-- PacMan & Ghosts actions are now transfered in PacManAction & GhostsActions classes rather than numbers
+- PacMan & Ghosts actions are now transfered in PacManAction & GhostsActions objects rather than numbers
 - Maze module created that allows you to access the maze in an OOP way
 - PacManHijackController created that allows you to pause/advance single frame/hijack PacMan controls at any time (great for debugging!)
 - Visualization now contains Scale2x mode (taken from MarioAI, kudos to Sergey Karakovskiy), which is enabled as default
