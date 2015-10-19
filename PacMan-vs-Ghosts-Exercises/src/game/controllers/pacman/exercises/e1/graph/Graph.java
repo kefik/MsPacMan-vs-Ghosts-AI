@@ -1,11 +1,11 @@
 package game.controllers.pacman.exercises.e1.graph;
 
+import game.controllers.Direction;
 import game.controllers.pacman.modules.Maze;
 import game.controllers.pacman.modules.Maze.MazeNode;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -14,8 +14,14 @@ public class Graph {
 
 	private Maze maze;
 	
+	/**
+	 * Node index -> Node
+	 */
 	private Map<Integer, Node> nodes = new HashMap<Integer, Node>();
 	
+	/**
+	 * Node index -> Link
+	 */
 	private Map<Integer, Link> links = new HashMap<Integer, Link>();
 	
 	public Graph(Maze maze) {
@@ -66,7 +72,9 @@ public class Graph {
 		Node nodeFrom = makeNode(mazeNodes[0]);
 		Node nodeTo = makeNode(mazeNodes[mazeNodes.length-1]);
 		
-		Link link = nodeFrom.targets.get(nodeTo);
+		Direction dirFromTo = mazeNodes[0].direction(mazeNodes[1]);
+		
+		Link link = nodeFrom.links.get(dirFromTo);
 		if (link != null) return link;
 		
 		MazeNode[] between = Arrays.copyOfRange(mazeNodes, 1, mazeNodes.length-1);
@@ -77,11 +85,8 @@ public class Graph {
 			links.put(mazeNode.index, link);
 		}
 		
-		nodeFrom.links.put(mazeNodes[0].direction(mazeNodes[1]), link);
-		nodeFrom.targets.put(nodeTo, link);
-		
+		nodeFrom.links.put(dirFromTo, link);		
 		nodeTo.links.put(mazeNodes[mazeNodes.length-1].direction(mazeNodes[mazeNodes.length-2]), link);
-		nodeTo.targets.put(nodeFrom, link);
 		
 		return link;
 	}

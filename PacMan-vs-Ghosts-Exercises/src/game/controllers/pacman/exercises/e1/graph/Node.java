@@ -17,11 +17,6 @@ public class Node {
 	 */
 	public Map<Direction, Link> links = new HashMap<Direction, Link>();
 	
-	/**
-	 * Other end -> Link
-	 */
-	public Map<Node, Link> targets = new HashMap<Node, Link>();
-		
 	public Node(int index, NodeType type) {
 		this.index = index;
 		this.type = type;
