@@ -15,6 +15,7 @@ import game.core.GameView;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.Date;
 
 
 public final class E1 extends PacManHijackController
@@ -77,6 +78,9 @@ public final class E1 extends PacManHijackController
 		}
 		if (key == KeyEvent.VK_F) {
 			drawPathFinder = !drawPathFinder;
+		}
+		if (key == KeyEvent.VK_N && pacman.pauseSimulation) {
+			if (pathFinder != null && pathFinder.isRunning()) pathFinder.step();
 		}
 		if (key == KeyEvent.VK_1) {
 			pathFinder = dfs;
