@@ -803,6 +803,7 @@ public class G implements Game
 	//E.g., path from a to c might be [a,f,r,t,c]
 	public int[] getPath(int from,int to)
 	{
+		if (from < 0 || to < 0) return new int[0];
 		int currentNode=from;
 		ArrayList<Integer> path=new ArrayList<Integer>();
 		int lastDir;

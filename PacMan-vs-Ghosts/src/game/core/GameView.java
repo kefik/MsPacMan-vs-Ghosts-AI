@@ -416,6 +416,11 @@ public final class GameView extends JComponent
     	if (isVisible)
     		debugTexts.add(new DebugText(x, y, color, text));
     }
+    
+    public synchronized static void addText(Game game, int nodeIndex, Color color, String text) {
+    	if (isVisible)
+    		debugTexts.add(new DebugText(game.getX(nodeIndex), game.getY(nodeIndex), color, text));
+    }
         
     /**
      * Draw debugging stuff.
@@ -438,8 +443,8 @@ public final class GameView extends JComponent
     	
     	for (int i = 0; i < debugTexts.size(); ++i) {
     		DebugText dt = debugTexts.get(i);
-    		bufferGraphics.setColor(dt.color);
-    		bufferGraphics.drawString(dt.text, dt.x, dt.y);
+    		bufferGraphics.setColor(dt.color);    		
+    		bufferGraphics.drawString(dt.text, dt.x*MAG+5, dt.y*MAG+10);
     	}
     	
     	debugPointers.clear();

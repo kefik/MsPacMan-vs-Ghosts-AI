@@ -165,7 +165,7 @@ public class PacManSimulator {
 		        boolean advanceGame = true;
 		        if (config.mayBePaused) {
 			        if (pacManAction.pauseSimulation || (ghostsActions != null && ghostsActions.pauseSimulation)) {
-			        	if (!pacManAction.nextFrame && (ghostsActions != null && !ghostsActions.nextFrame)) {
+			        	if (!pacManAction.nextFrame && (ghostsActions == null || !ghostsActions.nextFrame)) {
 			        		advanceGame = false;
 			        	}
 			        	config.pacManController.getAction().nextFrame = false;

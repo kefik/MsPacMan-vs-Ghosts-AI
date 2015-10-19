@@ -76,6 +76,8 @@ public final class NearestPillPacManVS extends PacManHijackController
 	}
 	
 	public static void main(String[] args) {
-		PacManSimulator.play(new NearestPillPacManVS(), new GameGhosts(false));
+		while (true) {
+			PacManSimulator.play(new NearestPillPacManVS(), new GameGhosts(false));
+		}
 	}
 }

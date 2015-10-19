@@ -2,7 +2,9 @@ package game.controllers;
 
 import game.core.Game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public enum Direction {
@@ -10,6 +12,8 @@ public enum Direction {
 	NONE(-1, 0, 0), UP(Game.UP, 0, -1), RIGHT(Game.RIGHT, 1, 0), DOWN(Game.DOWN, 0, 1), LEFT(Game.LEFT, -1, 0);
 	
 	private static Direction[] arrows = new Direction[]{UP, RIGHT, DOWN, LEFT};
+	
+	private static List<Direction> arrowsList = null;
 	
 	private static Map<Integer, Direction> indices = null;
 	
@@ -74,6 +78,20 @@ public enum Direction {
 	 */
 	public static Direction[] arrows() {
 		return arrows;
+	}
+	
+	/**
+	 * UP, RIGHT, DOWN, LEFT
+	 * @return
+	 */
+	public static List<Direction> arrowsList() {
+		if (arrowsList == null) {
+			arrowsList = new ArrayList<Direction>(4);
+			for (Direction d : arrows) {
+				arrowsList.add(d);
+			}
+		}
+		return arrowsList;
 	}
 	
 

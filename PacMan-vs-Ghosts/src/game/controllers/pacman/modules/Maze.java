@@ -3,6 +3,10 @@ package game.controllers.pacman.modules;
 import game.controllers.Direction;
 import game.core.Game;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Maze {
 	
 	public static enum NodeCategory {
@@ -176,6 +180,33 @@ public class Maze {
 		}
 		
 		/**
+		 * Filters {@link #links()}.
+		 * 
+		 * Array[UP, RIGHT, DOWN, LEFT] (as defined by {@link Direction#index}). Array may contain NULLs == wall || forbidden node. 
+		 * 
+		 * @return
+		 */
+		public MazeNode[] options(MazeNode... forbidden) {
+			MazeNode[] result = new MazeNode[4];
+			for (int i = 0; i < 4; ++i) {				
+				MazeNode option = neighbours[i];
+				if (option == null) continue;
+				boolean ok = true;
+				for (MazeNode forbiddenNode : forbidden) {
+					if (forbiddenNode == null) continue;
+					if (option.index == forbiddenNode.index) {
+						ok = false;
+						break;
+					}
+				}
+				if (ok) {
+					result[i] = option;
+				}				
+			}
+			return result;
+		}
+		
+		/**
 		 * Returns a {@link MazeNode} in given 'direction' or NULL if there is a wall. {@link Direction#NONE} evaluates to 'this'.
 		 * @param direction
 		 * @return
@@ -195,6 +226,48 @@ public class Maze {
 			if (direction == null) return false;
 			if (direction == Direction.NONE) return false;
 			return neighbours[direction.index] != null;
+		}
+		
+		/**
+		 * Returns random neighbor.
+		 * @return
+		 */
+		public MazeNode getRandomLink() {
+			List<Direction> directions = new ArrayList<Direction>(Direction.arrowsList());
+			Collections.shuffle(directions);
+			while (directions.size() > 0) {
+				Direction dir = directions.remove(directions.size()-1);
+				if (hasLink(dir)) return link(dir);
+			}
+			return null;
+		}
+		
+		/**
+		 * Returns random neighbor that is not within 'forbidden' list of nodes.
+		 * @return
+		 */
+		public MazeNode getRandomLink(MazeNode... forbidden) {
+			List<Direction> directions = new ArrayList<Direction>(Direction.arrowsList());
+			Collections.shuffle(directions);
+			MazeNode[] options = options(forbidden);
+			while (directions.size() > 0) {
+				Direction dir = directions.remove(directions.size()-1);
+				if (options[dir.index] != null) return options[dir.index];
+			}
+			return null;
+		}
+		
+		/**
+		 * Returns a direction for 'neighbour' ... must be immediate neighbour!
+		 * @param neighbour
+		 * @return
+		 */
+		public Direction direction(MazeNode neighbour) {
+			for (Direction dir : Direction.arrows()) {
+				MazeNode node = link(dir);
+				if (node == neighbour) return dir;
+			}
+			return Direction.NONE;
 		}
 		
 	}
@@ -287,9 +360,22 @@ public class Maze {
 		return result;
 	}
 	
+	/**
+	 * Returns a {@link MazeNode} for a given node index.
+	 * @param nodeIndex
+	 * @return
+	 */
 	public MazeNode getNode(int nodeIndex) {
 		if (nodes == null || nodeIndex < 0 || nodeIndex > nodes.length) return null;
 		return nodes[nodeIndex];
+	}
+	
+	/**
+	 * Returns all existing {@link MazeNode}s.
+	 * @return
+	 */
+	public MazeNode[] getNodes() {
+		return nodes;
 	}
 
 }
