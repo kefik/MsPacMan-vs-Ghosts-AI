@@ -4,11 +4,15 @@ import game.controllers.Direction;
 import game.controllers.pacman.modules.Maze;
 import game.controllers.pacman.modules.Maze.MazeNode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 public class Graph {
 
@@ -20,9 +24,14 @@ public class Graph {
 	private Map<Integer, Node> nodes = new HashMap<Integer, Node>();
 	
 	/**
+	 * Set of all existing links.
+	 */
+	private Set<Link> links = new HashSet<Link>();
+	
+	/**
 	 * Node index -> Link
 	 */
-	private Map<Integer, Link> links = new HashMap<Integer, Link>();
+	private Map<Integer, Link> node2Link = new HashMap<Integer, Link>();
 	
 	public Graph(Maze maze) {
 		this.maze = maze;
@@ -45,6 +54,21 @@ public class Graph {
 		makeLink(mazeNodes);		
 		
 		// TODO: provide own implementation
+		
+//		for (MazeNode node : maze.getNodes()) {
+//			if (!node.junction()) continue;
+//			for (Direction dir : Direction.arrows()) {
+//				if (!node.hasLink(dir)) continue;
+//				// Here we are in the situation when
+//				// -- we're probing a node that is a junction
+//				// -- there is a possibility to go from the junction in direction 'dir'
+//				
+//				// TODO: find a link leading from 'node' in direction 'dir' to another junction
+//				//       and create a link out of that	
+//				
+//			}
+//		}
+		
 	}
 	
 	/**
@@ -82,11 +106,20 @@ public class Graph {
 		link = new Link(nodeFrom, nodeTo, between);
 		
 		for (MazeNode mazeNode : mazeNodes) {
-			links.put(mazeNode.index, link);
+			node2Link.put(mazeNode.index, link);
 		}
 		
 		nodeFrom.links.put(dirFromTo, link);		
-		nodeTo.links.put(mazeNodes[mazeNodes.length-1].direction(mazeNodes[mazeNodes.length-2]), link);
+		
+		Direction dirToFrom = mazeNodes[mazeNodes.length-1].direction(mazeNodes[mazeNodes.length-2]);
+		
+		nodeTo.links.put(dirToFrom, link);
+		
+		links.add(link);
+				
+		if (link.distance == 0) {
+			System.out.println("Wierd link: [" + nodeFrom.index + "]-" + dirFromTo + "<--(" + link.distance + ")-->" + dirToFrom + "[" + nodeTo.index + "]");						
+		}
 		
 		return link;
 	}
@@ -95,8 +128,8 @@ public class Graph {
 		return nodes.values();
 	}
 	
-	public Node getNode(int index) {
-		return nodes.get(index);
+	public Node getNode(int nodeIndex) {
+		return nodes.get(nodeIndex);
 	}
 	
 	public Node getRandomNode() {
@@ -109,12 +142,12 @@ public class Graph {
 		return null;
 	}
 	
-	public Collection<Link> getLinks() {
-		return links.values();
+	public Set<Link> getLinks() {
+		return links;
 	}
 	
-	public Link getLink(int index) {
-		return links.get(index);
+	public Link getLink(int nodeIndex) {
+		return node2Link.get(nodeIndex);
 	}
 	
 }

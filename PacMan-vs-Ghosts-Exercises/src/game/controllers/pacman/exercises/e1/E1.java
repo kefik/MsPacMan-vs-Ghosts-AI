@@ -34,8 +34,14 @@ public final class E1 extends PacManHijackController
 	public void reset(Game game) {
 		super.reset(game);
 		
+		System.out.println("BUILDING GRAPH");
+		
 		// THIS WILL CREATE A GRAPH OUT OF MAZE WITHIN THE CONSTRUCTOR
 		graph = new Graph(maze);		
+		
+		System.out.println("GRAPH #NODES: " + graph.getNodes().size());
+		System.out.println("GRAPH #LINKS: " + graph.getLinks().size());
+		System.out.println("GRAPH BUILT");		
 	}
 	
 	/**
@@ -107,12 +113,7 @@ public final class E1 extends PacManHijackController
 	private void debugDrawGraph(Game game) {
 		if (!drawGraph) return;
 		for (Link link : graph.getLinks()) {
-			for (int i = 0; i < link.mazeNodes.length-1; ++i) {
-				GameView.addLines(game, Color.white, link.mazeNodes[i].index, link.mazeNodes[i+1].index);
-			}
-			MazeNode node = link.mazeNodes[link.mazeNodes.length / 2];
-			GameView.addText(game, node.index, Color.YELLOW, String.valueOf(link.distance));
-			GameView.addPoints(game, Color.YELLOW, link.n1.index, link.n2.index);
+			link.debugDrawLink(game, Color.LIGHT_GRAY, Color.DARK_GRAY, true);
 		}
 	}
 	
