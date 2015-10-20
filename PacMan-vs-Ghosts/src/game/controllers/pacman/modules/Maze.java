@@ -10,10 +10,13 @@ import java.util.List;
 public class Maze {
 	
 	public static enum NodeCategory {
-		TURN, CORRIDOR, T_CROSS, CROSS
+		SOLITER, TURN, CORRIDOR, T_CROSS, CROSS
 	}
 	
 	public static enum NodeType {
+		// NO NEIGHBOURS
+		SOLITER(NodeCategory.SOLITER),
+		
 		// TURNS
 		TURN_UP_RIGHT(NodeCategory.TURN), 
 		TURN_RIGHT_DOWN(NodeCategory.TURN), 
@@ -158,6 +161,7 @@ public class Maze {
 			if (neighbours[0] != null && neighbours[1] == null && neighbours[2] == null && neighbours[3] != null) return nodeType = NodeType.TURN_LEFT_UP;
 			if (neighbours[0] != null && neighbours[1] == null && neighbours[2] != null && neighbours[3] == null) return nodeType = NodeType.CORRIDOR_UP_DOWN;
 			if (neighbours[0] == null && neighbours[1] != null && neighbours[2] == null && neighbours[3] != null) return nodeType = NodeType.CORRIDOR_LEFT_RIGHT;
+			if (neighbours[0] == null && neighbours[1] == null && neighbours[2] == null && neighbours[3] == null) return nodeType = NodeType.SOLITER;
 			// TODO: rise an exception?
 			return null;
 		}
