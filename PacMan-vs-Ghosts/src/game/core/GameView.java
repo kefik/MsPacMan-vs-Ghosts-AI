@@ -295,6 +295,7 @@ public final class GameView extends JComponent
         	this.frame.setSize(frame.getWidth() * 2, frame.getHeight() * 2);
         	this.frame.center();
         }
+        this.frame.setVisible(true);
               
         //just wait for a bit for player to be ready
         try{Thread.sleep(2000);}catch(Exception e){}
@@ -314,8 +315,7 @@ public final class GameView extends JComponent
             getContentPane().add(BorderLayout.CENTER,comp);
             pack();
             Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
-            this.setLocation((int)(screen.getWidth()*3/8),(int)(screen.getHeight()*3/8));            
-            this.setVisible(true);
+            this.setLocation((int)(screen.getWidth()*3/8),(int)(screen.getHeight()*3/8));
             this.setResizable(false);
             setDefaultCloseOperation(EXIT_ON_CLOSE);
             repaint();            
