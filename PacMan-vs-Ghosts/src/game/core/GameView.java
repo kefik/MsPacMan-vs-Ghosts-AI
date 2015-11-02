@@ -276,6 +276,7 @@ public final class GameView extends JComponent
     		scale2x = new Scale2x(this.getPreferredSize().width, this.getPreferredSize().height);
     		if (frame != null) {
     			frame.setSize(frame.getWidth() * 2, frame.getHeight() * 2);
+    			//frame.setPreferredSize(new Dimension(frame.getWidth() * 2, frame.getHeight() * 2));
     			frame.repaint();
     		}
     	} else {
@@ -283,6 +284,7 @@ public final class GameView extends JComponent
     		scale2x = null;
     		if (frame != null) {
     			frame.setSize(frame.getWidth() / 2, frame.getHeight() / 2);
+    			//frame.setPreferredSize(new Dimension(frame.getWidth() / 2, frame.getHeight() / 2));
     			frame.repaint();
     		}
     	}
@@ -293,6 +295,7 @@ public final class GameView extends JComponent
         this.frame = new GameFrame(this);
         if (scale2x != null) {
         	this.frame.setSize(frame.getWidth() * 2, frame.getHeight() * 2);
+        	//this.frame.setPreferredSize(new Dimension(frame.getWidth() * 2, frame.getHeight() * 2));
         	this.frame.center();
         }
         this.frame.setVisible(true);

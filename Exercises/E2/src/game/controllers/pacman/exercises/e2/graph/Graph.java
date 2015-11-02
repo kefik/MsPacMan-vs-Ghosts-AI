@@ -1,4 +1,4 @@
-package game.controllers.pacman.exercises.e1.graph;
+package game.controllers.pacman.exercises.e2.graph;
 
 import game.controllers.Direction;
 import game.controllers.pacman.modules.Maze;
@@ -44,30 +44,58 @@ public class Graph {
 		// GRAPH IS BUILD LIKE THIS
 		// 1: obtain an array of MazeNodes 
 		
-		MazeNode[] mazeNodes = new MazeNode[20];
-		mazeNodes[0] = maze.getNodes()[maze.getNodes().length / 4];
-		for (int i = 1; i < mazeNodes.length; ++i) {
-			mazeNodes[i] = mazeNodes[i-1].getRandomLink(i > 1 ? mazeNodes[i-2] : null);
+//		MazeNode[] mazeNodes = new MazeNode[20];
+//		mazeNodes[0] = maze.getNodes()[maze.getNodes().length / 4];
+//		for (int i = 1; i < mazeNodes.length; ++i) {
+//			mazeNodes[i] = mazeNodes[i-1].getRandomLink(i > 1 ? mazeNodes[i-2] : null);
+//		}
+//		
+//		// 2: make a link out of them (auto create Node(s) if required)
+//		makeLink(mazeNodes);		
+		
+		
+		// we will go through all the mazenodes looking for "crossroads"
+		for (MazeNode node : maze.getNodes()) {
+			// now we are testing if 'node' is a cross road
+			if (!node.junction()) continue;
+			
+			// then we will query of the directions we can take from that crossroad
+			for (Direction dir : Direction.arrows()) {
+				// and if some path in 'dir' exists
+				if (!node.hasLink(dir)) continue;
+				
+				// then we will be building a list for a new LINK
+				
+				List<MazeNode> newLink = new ArrayList<MazeNode>();
+				
+				newLink.add(node);
+				
+				MazeNode next = null;
+				MazeNode current = node;
+				MazeNode previous = null;
+				
+				previous = current;
+				current = node.link(dir);
+				
+				while (!current.junction()) {
+					newLink.add(current);
+					
+					for (Direction nextDir : Direction.arrows()) {
+						if (current.hasLink(nextDir) && current.link(nextDir) != previous) {
+							next = current.link(nextDir);
+							break;
+						}
+					}					
+					previous = current;
+					current = next;
+					next = null;
+				}				
+				newLink.add(current);
+				
+				makeLink(newLink.toArray(new MazeNode[0]));
+			}
 		}
 		
-		// 2: make a link out of them (auto create Node(s) if required)
-		makeLink(mazeNodes);		
-		
-		// TODO: provide own implementation
-		
-//		for (MazeNode node : maze.getNodes()) {
-//			if (!node.junction()) continue;
-//			for (Direction dir : Direction.arrows()) {
-//				if (!node.hasLink(dir)) continue;
-//				// Here we are in the situation when
-//				// -- we're probing a node that is a junction
-//				// -- there is a possibility to go from the junction in direction 'dir'
-//				
-//				// TODO: find a link leading from 'node' in direction 'dir' to another junction
-//				//       and create a link out of that	
-//				
-//			}
-//		}
 		
 	}
 	
@@ -128,8 +156,8 @@ public class Graph {
 		return nodes.values();
 	}
 	
-	public Node getNode(int nodeIndex) {
-		return nodes.get(nodeIndex);
+	public Node getNode(int index) {
+		return nodes.get(index);
 	}
 	
 	public Node getRandomNode() {
@@ -146,8 +174,8 @@ public class Graph {
 		return links;
 	}
 	
-	public Link getLink(int nodeIndex) {
-		return node2Link.get(nodeIndex);
+	public Link getLink(int index) {
+		return node2Link.get(index);
 	}
 	
 }
