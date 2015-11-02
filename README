@@ -16,6 +16,11 @@ FEATURES:
 -- draw custom debug info via GameView static methods
 -- you can run the game WITHOUT ghosts as well (in order to play with pathfinding only)
 
+EXERCISES:
+
+The project is/was used to teach basic AI techniques (mainly graph-searches). It contains exercises to be given to students
+including visualization of graph-search algorithm execution.
+
 ==========
 CHANGE LOG
 ==========
