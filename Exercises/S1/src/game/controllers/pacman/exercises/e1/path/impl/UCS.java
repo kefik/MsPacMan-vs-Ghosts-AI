@@ -1,12 +1,12 @@
 package game.controllers.pacman.exercises.e1.path.impl;
 
-import game.controllers.pacman.exercises.e1.path.impl.base.SearchNode;
+import game.controllers.pacman.exercises.e1.path.impl.base.UninformedNode;
 import game.controllers.pacman.exercises.e1.path.impl.base.UninformedGraphSearch;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * UNIFORM-COST-SEARCH
@@ -15,68 +15,36 @@ import java.util.List;
  */
 public class UCS extends UninformedGraphSearch {
 
-	private SearchNode best;
-	
 	@Override
 	public String getName() {
-		return "UFS[" + getSteps() + "]";
+		return "UCS[" + getSteps() + "]";
 	}
 
 	@Override
 	public void reset() {
 		super.reset();
-		best = null;
 	}
 	
 	@Override
-	protected Collection<SearchNode> createCloseList() {
-		return new HashSet<SearchNode>();
+	protected Collection<UninformedNode> createCloseList() {
+		return new HashSet<UninformedNode>();
 	}
 
 	@Override
-	protected Collection<SearchNode> createOpenList() {		
-		return new ArrayList<SearchNode>() {
-			
+	protected Collection<UninformedNode> createOpenList() {		
+		return new PriorityQueue<UninformedNode>(20, new Comparator<UninformedNode>() {
+
 			@Override
-			public boolean add(SearchNode e) {
-				boolean result = super.add(e);
-				if (!result) return false;
-				if (best == null) {
-					best = e;
-				} else {
-					if (best.pathCost > e.pathCost) {
-						best = e;
-					}
-				}
-				return true;
+			public int compare(UninformedNode o1, UninformedNode o2) {
+				return o1.pathCost - o2.pathCost;
 			}
 			
-			@Override
-			public boolean remove(Object o) {
-				boolean result = super.remove(o);				
-				if (!result) return false;
-				
-				if (o == best) {
-					if (size() == 0) best = null;
-					else {
-						best = get(0);
-						for (int i = 1; i < size(); ++i) {
-							if (get(i).pathCost < best.pathCost) {
-								best = get(i);
-							}
-						}
-					}
-				}
-				
-				return true;
-			}
-			
-		};
+		});
 	}
 
 	@Override
-	protected SearchNode selectNextNode(Collection<SearchNode> openList) {
-		return best;
+	protected UninformedNode selectNextNode(Collection<UninformedNode> openList) {
+		return ((PriorityQueue<UninformedNode>)openList).peek();
 	}
 
 }

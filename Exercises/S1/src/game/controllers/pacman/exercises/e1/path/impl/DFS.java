@@ -1,6 +1,6 @@
 package game.controllers.pacman.exercises.e1.path.impl;
 
-import game.controllers.pacman.exercises.e1.path.impl.base.SearchNode;
+import game.controllers.pacman.exercises.e1.path.impl.base.UninformedNode;
 import game.controllers.pacman.exercises.e1.path.impl.base.UninformedGraphSearch;
 
 import java.util.ArrayList;
@@ -21,18 +21,18 @@ public class DFS extends UninformedGraphSearch {
 	}
 
 	@Override
-	protected Collection<SearchNode> createCloseList() {
-		return new HashSet<SearchNode>();
+	protected Collection<UninformedNode> createCloseList() {
+		return new HashSet<UninformedNode>();
 	}
 
 	@Override
-	protected Collection<SearchNode> createOpenList() {		
-		return new ArrayList<SearchNode>();
+	protected Collection<UninformedNode> createOpenList() {		
+		return new ArrayList<UninformedNode>();
 	}
 
 	@Override
-	protected SearchNode selectNextNode(Collection<SearchNode> openList) {
-		return ((List<SearchNode>)openList).get(openList.size()-1);
+	protected UninformedNode selectNextNode(Collection<UninformedNode> openList) {
+		return ((List<UninformedNode>)openList).get(openList.size()-1);
 	}
 
 

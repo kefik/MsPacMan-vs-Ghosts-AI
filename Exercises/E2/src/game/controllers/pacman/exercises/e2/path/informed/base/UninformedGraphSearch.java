@@ -146,7 +146,7 @@ public abstract class UninformedGraphSearch implements IPathFinder {
 	
 	@Override
 	public boolean isRunning() {
-		return start != null && opened.size() > 0;
+		return start != null && opened.size() > 0 && path == null;
 	}
 	
 	@Override

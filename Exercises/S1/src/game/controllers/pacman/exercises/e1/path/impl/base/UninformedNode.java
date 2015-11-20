@@ -2,7 +2,7 @@ package game.controllers.pacman.exercises.e1.path.impl.base;
 
 import game.controllers.pacman.exercises.e1.graph.Node;
 
-public class SearchNode {
+public class UninformedNode {
 
 	/**
 	 * Wrapped node.
@@ -17,9 +17,9 @@ public class SearchNode {
 	/**
 	 * Parent node on the path to this node.
 	 */
-	public SearchNode parent;
+	public UninformedNode parent;
 	
-	public SearchNode(Node node, int pathCost, SearchNode parent) {
+	public UninformedNode(Node node, int pathCost, UninformedNode parent) {
 		this.node = node;
 		this.pathCost = pathCost;
 		this.parent = parent;
@@ -31,8 +31,8 @@ public class SearchNode {
 	
 	public boolean equals(Object node) {
 		if (node == null) return false;
-		if (!(node instanceof SearchNode)) return false;
-		return this.node == ((SearchNode)node).node;
+		if (!(node instanceof UninformedNode)) return false;
+		return this.node == ((UninformedNode)node).node;
 	}	
 	
 }

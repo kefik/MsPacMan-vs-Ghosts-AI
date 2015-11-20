@@ -20,33 +20,33 @@ public abstract class UninformedGraphSearch implements IPathFinder {
 	protected Node end;
 	
 	protected int steps = 0;
-	protected Map<Node, SearchNode> nodes;
-	protected Collection<SearchNode> closed;
-	protected Collection<SearchNode> opened;
+	protected Map<Node, UninformedNode> nodes;
+	protected Collection<UninformedNode> closed;
+	protected Collection<UninformedNode> opened;
 	
 	protected Path path;
 	
-	protected abstract Collection<SearchNode> createCloseList();
-	protected abstract Collection<SearchNode> createOpenList();
+	protected abstract Collection<UninformedNode> createCloseList();
+	protected abstract Collection<UninformedNode> createOpenList();
 	
-	protected abstract SearchNode selectNextNode(Collection<SearchNode> openList);
+	protected abstract UninformedNode selectNextNode(Collection<UninformedNode> openList);
 	
-	protected Collection<Link> getOptions(Graph graph, SearchNode searchNode) {
+	protected Collection<Link> getOptions(Graph graph, UninformedNode searchNode) {
 		Node node = searchNode.node;
 		return node.links.values();
 	}	
 	
-	protected SearchNode makeSearchNode(Node node) {
+	protected UninformedNode makeSearchNode(Node node) {
 		return makeSearchNode(node, 0, null);
 		
 	}
 	
-	public SearchNode makeSearchNode(Node node, int pathCost, SearchNode parent) {
-		SearchNode result = nodes.get(node);
+	public UninformedNode makeSearchNode(Node node, int pathCost, UninformedNode parent) {
+		UninformedNode result = nodes.get(node);
 		if (result != null) {
 			return result;
 		}
-		result = new SearchNode(node, pathCost, parent);
+		result = new UninformedNode(node, pathCost, parent);
 		nodes.put(node, result);
 		return result;
 	}
@@ -70,7 +70,7 @@ public abstract class UninformedGraphSearch implements IPathFinder {
 		this.start = start;
 		this.end = goal;
 		
-		nodes = new HashMap<Node, SearchNode>();
+		nodes = new HashMap<Node, UninformedNode>();
 		closed = createCloseList();
 		opened = createOpenList();
 		 
@@ -81,7 +81,9 @@ public abstract class UninformedGraphSearch implements IPathFinder {
 	public void step() {
 		if (!isRunning()) return;
 		
-		SearchNode expanding = selectNextNode(opened);
+		++steps;
+		
+		UninformedNode expanding = selectNextNode(opened);
 
 		if (expanding.node == end) {
 			// VICTORY
@@ -89,7 +91,7 @@ public abstract class UninformedGraphSearch implements IPathFinder {
 			Node node = end;
 			while (node != null) {
 				path.add(node);
-				SearchNode parent = nodes.get(node).parent;
+				UninformedNode parent = nodes.get(node).parent;
 				if (parent == null) break;
 				node = parent.node;
 			}
@@ -111,7 +113,7 @@ public abstract class UninformedGraphSearch implements IPathFinder {
 			int newPathCost = expanding.pathCost + linkCost;
 
 			// CREATE OR GET FOR 'nextNode'
-			SearchNode next = makeSearchNode(nextNode, newPathCost, expanding);
+			UninformedNode next = makeSearchNode(nextNode, newPathCost, expanding);
 
 			if (closed.contains(next)) {
 				// WE ALREADY HAVE THE NEXT NODE IN CLOSED LIST!
@@ -146,7 +148,7 @@ public abstract class UninformedGraphSearch implements IPathFinder {
 	
 	@Override
 	public boolean isRunning() {
-		return start != null && opened.size() > 0;
+		return start != null && opened.size() > 0 && path == null;
 	}
 	
 	@Override
@@ -176,14 +178,14 @@ public abstract class UninformedGraphSearch implements IPathFinder {
 	
 	@Override
 	public Node getParent(Node node) {
-		SearchNode search = nodes.get(node);
+		UninformedNode search = nodes.get(node);
 		return search == null || search.parent == null ? null : search.parent.node;
 	}
 	
 	@Override
 	public Collection<Node> getClosedList() {
 		List<Node> result = new ArrayList<Node>(closed.size());
-		for (SearchNode node : closed) {
+		for (UninformedNode node : closed) {
 			result.add(node.node);
 		}
 		return result;
@@ -192,7 +194,7 @@ public abstract class UninformedGraphSearch implements IPathFinder {
 	@Override
 	public Collection<Node> getOpenList() {
 		List<Node> result = new ArrayList<Node>(opened.size());
-		for (SearchNode node : opened) {
+		for (UninformedNode node : opened) {
 			result.add(node.node);
 		}
 		return result;
