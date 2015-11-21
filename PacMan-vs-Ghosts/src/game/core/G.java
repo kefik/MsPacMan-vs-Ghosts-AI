@@ -13,19 +13,21 @@
  */
 package game.core;
 
+import game.PacManSimulator.GameConfig;
+import game.controllers.Direction;
 import game.controllers.ghosts.GhostsActions;
 import game.controllers.pacman.PacManAction;
 
 import java.io.BufferedReader;
-//import java.io.File;
-//import java.io.FileInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-//import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 /*
  * Simple implementation of Ms Pac-Man. The class Game contains all code relating to the
@@ -34,6 +36,12 @@ import java.util.BitSet;
  */
 public class G implements Game
 {	
+	public static Random rnd = new Random();
+	
+	protected GameConfig config;
+	
+	protected int remainingLevels;
+	
 	//Static stuff (mazes are immutable - hence static)
 	protected static Maze[] mazes=new Maze[NUM_MAZES];			
 	
@@ -93,6 +101,14 @@ public class G implements Game
 	{
 		if(newLevel)
 		{
+			if (remainingLevels > 0) {
+				--remainingLevels;
+				if (remainingLevels <= 0) {
+					gameOver = true;
+					return;
+				}
+			}
+			
 			curMaze=(curMaze+1)%G.NUM_MAZES;
 			totLevel++;
 			levelTime=0;	
@@ -100,6 +116,14 @@ public class G implements Game
 			pills.set(0,getNumberPills());
 			powerPills=new BitSet(getNumberPowerPills());
 			powerPills.set(0,getNumberPowerPills());
+			
+			if (!config.powerPillsEnabled) {
+				powerPills.clear();
+			}
+			if (config.totalPills < 1) {
+				int number = (int)Math.ceil(pills.length() * (1-(config.totalPills > 0 ? config.totalPills : 0)));
+				decimatePills(number);
+			}
 		}
 		
 		curPacManLoc=getInitialPacPosition();
@@ -113,6 +137,60 @@ public class G implements Game
 		
 		for(int i=0;i<lairTimes.length;i++)
 			lairTimes[i]=(int)(G.LAIR_TIMES[i]*(Math.pow(LAIR_REDUCTION,totLevel)));
+	}
+	
+	// Remove 'number' of pills from the maze
+	protected void decimatePills(int number) {
+		if (number == pills.length()) {
+			pills.clear();
+		} else {
+			List<Integer> pillNodeIndices = new ArrayList<Integer>();
+			Node[] graph = mazes[curMaze].graph;
+			for (int i = 0; i < graph.length; ++i) {
+				if (graph[i].pillIndex >= 0) {
+					pillNodeIndices.add(i);
+				}
+			}
+			while (number > 0) {
+				int startNodePillIndex = pillNodeIndices.get(G.rnd.nextInt(pillNodeIndices.size()));
+				List<Integer> nodeIndices = new ArrayList<Integer>();
+				Set<Integer> closedIndices = new HashSet<Integer>();
+				nodeIndices.add(startNodePillIndex);
+				while (number > 0 && nodeIndices.size() > 0) {
+					// CLEAR PILL 
+					int nodeIndex = nodeIndices.remove(0);
+					int pillIndex = getPillIndex(nodeIndex);				
+					pillNodeIndices.remove((Object)nodeIndex);
+					closedIndices.add(nodeIndex);
+					
+					if (pillIndex >= 0 && pills.get(pillIndex)) {
+						pills.clear(pillIndex);
+						--number;
+					}
+					
+					// CHECK NEIGHBOURS
+					int[] neighbours = new int[4];
+					int numNeighbours = 0;
+					for (Direction dir : Direction.arrows()) {
+						int nextNode = getNeighbour(nodeIndex, dir.index);
+						if (nextNode >= 0) {
+							neighbours[dir.index] = nextNode;
+							++numNeighbours;
+						} else {
+							neighbours[dir.index] = -1;
+						}
+					}
+					if (numNeighbours == 2) {
+						// CORRIDOR
+						for (int neighbour : neighbours) {
+							if (neighbour >= 0 && !closedIndices.contains(neighbour)) {
+								nodeIndices.add(neighbour);
+							}
+						}
+					}
+				}				
+			}
+		}
 	}
 		
 	/////////////////////////////////////////////////////////////////////////////
@@ -136,7 +214,7 @@ public class G implements Game
 		feast();							//ghosts eat pac-man or vice versa
 		
 		if (ghosts != null) {
-			for(int i=0;i<lairTimes.length;i++) {
+			for(int i=0;i<lairTimes.length && i < ghosts.ghostCount; i++) {
 				if(lairTimes[i]>0)
 				{
 					lairTimes[i]--;
@@ -244,7 +322,7 @@ public class G implements Game
 	protected void updateGhosts(GhostsActions ghosts,boolean reverse)
 	{
 		int[] directions = new int[4];
-		for (int i = 0; i < ghosts.actions.length; ++i) {
+		for (int i = 0; i < ghosts.ghostCount; ++i) {
 			directions[i] = ghosts.actions[i].get().index;
 		}
 		
@@ -252,7 +330,7 @@ public class G implements Game
 			directions=Arrays.copyOf(lastGhostDirs,lastGhostDirs.length);
 		}
 		
-		for(int i=0;i<directions.length;i++)
+		for(int i=0;i<ghosts.ghostCount;i++)
 		{		
 			if(lairTimes[i]==0)
 			{
@@ -331,7 +409,7 @@ public class G implements Game
 			
 			reverse=true;
 		}
-		else if(levelTime>1 && Math.random()<G.GHOST_REVERSAL)	//random ghost reversal
+		else if (levelTime>1 && G.rnd.nextDouble() < G.GHOST_REVERSAL) //random ghost reversal
 			reverse=true;
 		
 		return reverse;

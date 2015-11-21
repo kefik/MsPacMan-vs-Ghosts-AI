@@ -4,6 +4,7 @@ import game.controllers.ghosts.GhostsActions;
 import game.controllers.ghosts.IGhostsController;
 import game.controllers.pacman.IPacManController;
 import game.controllers.pacman.PacManAction;
+import game.core.G;
 import game.core.GameView;
 import game.core.Replay;
 import game.core.Replay.ReplayGhosts;
@@ -13,6 +14,7 @@ import game.core._RG_;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.util.Random;
 
 /**
  * One replayer can run one instance of PacMan-vs-Ghosts replay.
@@ -64,12 +66,14 @@ public class PacManReplayer {
 		// RESET INSTANCE & SAVE CONFIG
 		reset(config);
 		
-		// INITIALIZE THE SIMULATION
-		game = new _RG_();
-		game.newGame();
-
 		// LOAD REPLAY
 		Replay replay = new Replay(config.replayFile);
+		
+		G.rnd = new Random(replay.gameConfig.seed);
+		
+		// INITIALIZE THE SIMULATION
+		game = new _RG_();
+		game.newGame(replay.gameConfig);
 		
 		// INIT CONTROLLERS
 		final IPacManController pacManController = replay.getPacMan();

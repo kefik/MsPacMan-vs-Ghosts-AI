@@ -6,10 +6,13 @@ public final class GhostsActions {
 	
 	public GhostAction[] actions = new GhostAction[4];
 	
+	public final int ghostCount;	
+	
 	public boolean pauseSimulation;
 	public boolean nextFrame;
 	
-	public GhostsActions() {
+	public GhostsActions(int ghostCount) {
+		this.ghostCount = ghostCount;
 		for (int i = 0; i < actions.length; ++i) {
 			actions[i] = new GhostAction();
 		}
@@ -63,7 +66,7 @@ public final class GhostsActions {
 	}		
 	
 	public GhostsActions clone() {
-		GhostsActions result = new GhostsActions();
+		GhostsActions result = new GhostsActions(ghostCount);
 		
 		for (int i = 0; i < actions.length; ++i) {
 			result.actions[i] = actions[i].clone();

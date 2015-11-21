@@ -1,5 +1,6 @@
 package game.core;
 
+import game.PacManSimulator.GameConfig;
 import game.controllers.Direction;
 import game.controllers.ghosts.GhostsActions;
 import game.controllers.ghosts.IGhostsController;
@@ -15,16 +16,13 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-/*
- * This class allows one to record games to replay them later. This may be done in the Exec class.
- * It simply records all the directions taken by the controllers AFTER directions were corrected and/or
- * random ghost reversals. The game must be replayed using _RG_ which does not have random reversal events
- * and allows ghosts to reverse (to mirror random ghost reversals that took place during the original
- * game play).
- */
 @SuppressWarnings({"rawtypes","unchecked"})
 public class Replay
 {
+	public GameConfig gameConfig = new GameConfig();
+	
+	private int ghostCount;
+	
     private ReplayMsPacman pacMan;
     private ReplayGhosts ghosts;
 
@@ -37,7 +35,7 @@ public class Replay
     {
         loadActions(file);
         this.pacMan=new ReplayMsPacman();
-        this.ghosts=new ReplayGhosts();
+        this.ghosts=new ReplayGhosts(ghostCount);
     }
  
 	public void loadActions(File file)
@@ -49,13 +47,19 @@ public class Replay
         ghostLocations=data[3];
     }
 
-    public static void saveActions(String actions, File replayFile, boolean firstWrite)
+    public static void saveActions(GameConfig gameConfig, int ghostCount, String actions, File replayFile, boolean firstWrite)
     {
         try
         {
             FileOutputStream outS=new FileOutputStream(replayFile, !firstWrite);
             PrintWriter pw=new PrintWriter(outS);
 
+            if (firstWrite) {
+            	System.out.println("Saving replay into: " + replayFile.getAbsolutePath());
+            	pw.println(gameConfig.asString());
+            	pw.println(ghostCount);
+            }
+            
             pw.println(actions);
 
             pw.flush();
@@ -89,6 +93,12 @@ public class Replay
         try
         {
             BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            
+            gameConfig.fromString(br.readLine());
+            
+            String ghostCount = br.readLine();
+            this.ghostCount = Integer.parseInt(ghostCount);
+            
             String input=br.readLine();
 
             while(input!=null && !input.equals(""))
@@ -160,6 +170,10 @@ public class Replay
 			action.set(actionDir);
 		}
 		
+		@Override
+		public void killed() {
+		}
+		
 		public int getLocation(Game game) {
 			return pacManLocations.get(game.getTotalTime());
 		}
@@ -173,10 +187,19 @@ public class Replay
 	//Simple controller that simply plays the next recorded action
     public class ReplayGhosts implements IGhostsController
     {
-    	private GhostsActions actions = new GhostsActions();
+    	private GhostsActions actions;
+    	
+    	public ReplayGhosts(int ghostCount) {
+			actions = new GhostsActions(ghostCount);
+		}
+
+		@Override
+    	public int getGhostCount() {
+    		return ghostCount;
+    	}
     	
     	@Override
-		public void reset(Game game) {
+		public void reset(Game game) {    		
     		actions.reset();
 		}
     	

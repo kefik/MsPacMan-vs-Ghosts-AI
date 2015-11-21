@@ -13,7 +13,14 @@
  */
 package game.core;
 
+import game.PacManSimulator.GameConfig;
+import game.controllers.Direction;
+
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class _G_ extends G
 {
@@ -22,12 +29,15 @@ public class _G_ extends G
 	//to save replays
 	private int pacManDir=G.INITIAL_PAC_DIR;
 	private StringBuilder sb;
-	
+
 	public _G_(){}
 	
 	//Instantiates everything to start a new game
-	public void newGame()
+	public void newGame(GameConfig config)
 	{	
+		this.config = config;
+		this.remainingLevels = config.levelsToPlay;
+		
 		init();		//load mazes if not yet loaded
 		
 		curMaze=0;
@@ -48,6 +58,14 @@ public class _G_ extends G
 		livesRemaining=G.NUM_LIVES;
 		extraLife=false;
 		gameOver=false;
+		
+		if (!config.powerPillsEnabled) {
+			powerPills.clear();
+		}
+		if (config.totalPills < 1) {
+			int number = (int)Math.ceil(pills.length() * (1-(config.totalPills > 0 ? config.totalPills : 0)));
+			decimatePills(number);
+		}
 		
 		reset(false);
 		

@@ -5,9 +5,17 @@ import game.core.Game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 public class Maze {
+
+	private static Random random = new Random(System.currentTimeMillis());
+	
+	public static final int HEIGHT = 120;
+	public static final int WIDTH = 120;
 	
 	public static enum NodeCategory {
 		SOLITER, TURN, CORRIDOR, T_CROSS, CROSS
@@ -104,10 +112,7 @@ public class Maze {
 		 * @return
 		 */
 		public boolean ghost() {
-			for (int i = 0; i < 4; ++i) {
-				if (game.getCurGhostLoc(i) == index) return true;
-			}
-			return false;
+			return getGhostLocationSet().contains(this);
 		}
 		
 		/**
@@ -115,6 +120,7 @@ public class Maze {
 		 * @return
 		 */
 		public boolean ghostEdible() {
+			if (!ghost()) return false;
 			for (int i = 0; i < 4; ++i) {
 				if (game.getCurGhostLoc(i) == index) {
 					if (game.isEdible(i)) return true;
@@ -128,6 +134,7 @@ public class Maze {
 		 * @return
 		 */
 		public boolean ghostDanger() {
+			if (!ghost()) return false;
 			for (int i = 0; i < 4; ++i) {
 				if (game.getCurGhostLoc(i) == index) {
 					if (!game.isEdible(i)) return true;
@@ -269,7 +276,20 @@ public class Maze {
 		public Direction direction(MazeNode neighbour) {
 			for (Direction dir : Direction.arrows()) {
 				MazeNode node = link(dir);
-				if (node == neighbour) return dir;
+				if (node != null && node == neighbour) return dir;
+			}
+			return Direction.NONE;
+		}
+		
+		/**
+		 * Returns a direction for 'neighbour' ... must be immediate neighbour!
+		 * @param neighbour
+		 * @return
+		 */
+		public Direction direction(int neighbour) {
+			for (Direction dir : Direction.arrows()) {
+				MazeNode node = link(dir);
+				if (node != null && node.index == neighbour) return dir;
 			}
 			return Direction.NONE;
 		}
@@ -353,15 +373,11 @@ public class Maze {
 	}
 	
 	/**
-	 * Returns {@link MazeNode} with ghosts.
+	 * Returns {@link MazeNode} where the Ms Pac-Man stands.
 	 * @return
 	 */
-	public MazeNode[] getGhostLocations() {
-		MazeNode[] result = new MazeNode[4];
-		for (int i = 0; i < 4; ++i) {
-			result[i] = getNode(game.getCurGhostLoc(i));
-		}
-		return result;
+	public MazeNode getPacManLocation() {
+		return getNode(game.getCurPacManLoc());
 	}
 	
 	/**
@@ -380,6 +396,71 @@ public class Maze {
 	 */
 	public MazeNode[] getNodes() {
 		return nodes;
+	}
+
+	/**
+	 * Returns random {@link MazeNode}.
+	 * @return
+	 */
+	public MazeNode getRandomNode() {
+		return nodes[random.nextInt(nodes.length)];
+	}
+	
+	/**
+	 * Underlying game data.
+	 * @return
+	 */
+	public Game getGame() {
+		return game;
+	}
+
+	private int lastGhostTimeLocations = -1;
+
+	private MazeNode[] ghostLocations = new MazeNode[4];
+	
+	private int lastGhostTimeLocationSet = -1;
+
+	private Set<MazeNode> ghostLocationSet = new HashSet<MazeNode>();
+	
+	private int lastGhostTimeIndices = -1;
+	
+	private Set<Integer> ghostLocationIndices = new HashSet<Integer>();
+	
+	public Set<Integer> getGhostLocationIndices() {
+		if (lastGhostTimeIndices == game.getTotalTime()) return ghostLocationIndices;
+		ghostLocationIndices.clear();
+		for (int i = 0; i < 4; ++i) {
+			ghostLocationIndices.add(game.getCurGhostLoc(i));
+		}
+		lastGhostTimeIndices = game.getTotalTime();
+		return ghostLocationIndices;
+	}
+	
+	/**
+	 * Returns {@link MazeNode} with ghosts.
+	 * @return
+	 */
+	public MazeNode[] getGhostLocations() {
+		if (lastGhostTimeLocations == game.getTotalTime()) return ghostLocations;
+		for (int i = 0; i < 4; ++i) {
+			ghostLocations[i] = getNode(game.getCurGhostLoc(i));
+		}
+		lastGhostTimeLocations = game.getTotalTime();
+		return ghostLocations;
+	}
+	
+	/**
+	 * Returns set of {@link MazeNode} with ghosts.
+	 * @return
+	 */
+	public Set<MazeNode> getGhostLocationSet() {
+		if (lastGhostTimeLocationSet == game.getTotalTime()) return ghostLocationSet;
+		ghostLocationSet.clear();
+		for (int i = 0; i < 4; ++i) {
+			ghostLocationSet.add(getNode(game.getCurGhostLoc(i)));
+		}
+		lastGhostTimeLocationSet = game.getTotalTime();
+		return ghostLocationSet;
 	}
 
 }

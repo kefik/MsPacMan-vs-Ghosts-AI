@@ -35,6 +35,11 @@ public interface IPacManController
 	public void tick(Game game, long timeDue);
 	
 	/**
+	 * MS PacMan has been just eaten by a ghost.
+	 */
+	public void killed();
+	
+	/**
 	 * Return {@link PacManAction} containing Ms Pac-Man decision, what to do next.
 	 * @return
 	 */

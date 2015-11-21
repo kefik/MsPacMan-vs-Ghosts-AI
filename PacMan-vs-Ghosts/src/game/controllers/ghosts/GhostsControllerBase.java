@@ -4,8 +4,22 @@ import game.core.Game;
 
 public abstract class GhostsControllerBase implements IGhostsController {
 
-	protected GhostsActions input = new GhostsActions();
+	protected int ghostCount;
+	
+	protected GhostsActions input;	
 
+	public GhostsControllerBase(int ghostCount) {
+		this.ghostCount = ghostCount;
+		if (this.ghostCount < 0) ghostCount = 0;
+		if (this.ghostCount > 4) ghostCount = 4;
+		input = new GhostsActions(ghostCount);
+	}
+	
+	@Override
+	public int getGhostCount() {
+		return ghostCount;
+	}
+	
 	@Override
 	public void reset(Game game) {
 		input.reset();

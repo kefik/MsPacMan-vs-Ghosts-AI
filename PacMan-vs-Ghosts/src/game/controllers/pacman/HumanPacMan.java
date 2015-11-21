@@ -26,6 +26,10 @@ public final class HumanPacMan implements IPacManController, KeyListener
     @Override
     public void tick(Game game, long timeDue) {
     }
+    
+    @Override
+    public void killed() {
+    }
 
     @Override
     public PacManAction getAction() {

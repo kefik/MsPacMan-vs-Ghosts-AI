@@ -13,6 +13,7 @@
  */
 package game.core;
 
+import game.controllers.pacman.modules.Maze;
 import game.core.G;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -394,6 +395,40 @@ public final class GameView extends JComponent
     {
     	if(isVisible)
     		debugLines.add(new DebugLine(game.getX(fromNnodeIndex),game.getY(fromNnodeIndex),game.getX(toNodeIndex),game.getY(toNodeIndex),color));    	
+    }
+    
+    /**
+     * Adds a line to be drawn between specified nodes for the purpose of PATH visualization, i.e., taking care of TORUS on X-AXIS. 
+     * <br/><br/>
+     * Must be called every frame, i.e., lines are deleted after they are drawn.
+     * <br/><br/>
+     * NOTE: This won't do anything in the competition but your code will still work.
+     * 
+     * @param game
+     * @param color
+     * @param fromNnodeIndex
+     * @param toNodeIndex
+     */
+    public synchronized static void addLinesPath(Game game, Color color, int fromNodeIndex, int toNodeIndex) {
+    	int fromX = game.getX(fromNodeIndex);
+		int fromY = game.getY(fromNodeIndex);
+		int toX = game.getX(toNodeIndex);
+		int toY = game.getY(toNodeIndex);
+		
+		boolean drawXDirect = fromY != toY || (Math.abs(fromX - toX)) < (Maze.WIDTH - Math.abs(fromX - toX));
+		
+		if (drawXDirect) {
+			GameView.addLines(game, color, fromNodeIndex, toNodeIndex);
+		} else {
+			// TORUS!
+			if (fromX < toX) {
+				GameView.addLines(game, color, fromX, fromY, 0, fromY);
+				GameView.addLines(game, color, toX, toY, Maze.WIDTH, toY);
+			} else {
+				GameView.addLines(game, color, toX, toY, 0, toY);
+				GameView.addLines(game, color, fromX, fromY, Maze.WIDTH, fromY);
+			}
+		}
     }
     
     /**

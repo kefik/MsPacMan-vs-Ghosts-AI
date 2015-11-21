@@ -12,6 +12,12 @@ import game.core.Game;
 public interface IGhostsController
 {
 	/**
+	 * How many ghosts (0-4) this controller control. 
+	 * @return
+	 */
+	public int getGhostCount();
+	
+	/**
 	 * Resets the controller before game starts.
 	 * 
 	 * @param game initial state of the game

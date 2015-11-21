@@ -49,9 +49,7 @@ public interface Game
 	public static final int NUM_LIVES=3;					//total number of lives Ms Pac-Man has (current + NUM_LIVES-1 spares)
 	public static final int INITIAL_PAC_DIR=3;				//initial direction taken by Ms Pac-Man
 	public static final int[] INITIAL_GHOST_DIRS={3,3,3,3};	//initial directions for the ghosts (after leaving the lair)
-	public static final int GHOST_SPEED_REDUCTION=2;		//difference in speed when ghosts are edible (every GHOST_SPEED_REDUCTION, a ghost remains stationary)
-	
-	public static final Random rnd=new Random();
+	public static final int GHOST_SPEED_REDUCTION=2;		//difference in speed when ghosts are edible (every GHOST_SPEED_REDUCTION, a ghost remains stationary)	
 	
 	public Game copy();														//returns an exact copy of the game (forward model)
 	public int[] advanceGame(PacManAction pacMan, GhostsActions ghosts);	//advances the game using the actions (directions) supplied; returns all directions played [PacMan, Ghost1, Ghost2, Ghost3, Ghost4]

@@ -2,6 +2,7 @@ package game.controllers.ghosts.game;
 
 import game.controllers.ghosts.GhostsActions;
 import game.controllers.ghosts.IGhostsController;
+import game.core.G;
 import game.core.Game;
 import game.core.GameView;
 
@@ -19,7 +20,9 @@ public class GameGhosts implements IGhostsController
 	public final int CHASE = 1;
 	public final int FRIGHTENED = 2;
 	
-	public GhostsActions actions = new GhostsActions();
+	public int ghostCount = 4;
+	
+	public GhostsActions actions;
 	
 	public GameGhostAI GhostCurrentAI;
 	public GameGhostAI GhostPrevAI;
@@ -46,8 +49,27 @@ public class GameGhosts implements IGhostsController
 	 */
 	public int[] GhostState;			
 	
-	public GameGhosts(boolean debugging){
+	public GameGhosts() {
+		this(4, false);
+	}
+	
+	public GameGhosts(int ghostCount) {
+		this((ghostCount < 0 ? 0 : (ghostCount > 4 ? 4 : ghostCount)), false);
+	}
+	
+	public GameGhosts(boolean debugging) {
+		this(4, debugging);
+	}
+	
+	public GameGhosts(int ghostCount, boolean debugging){
+		this.ghostCount = ghostCount;
 		Debugging = debugging;
+		actions = new GhostsActions(ghostCount);
+	}
+	
+	@Override
+	public int getGhostCount() {
+		return ghostCount;
 	}
 	
 	
@@ -258,7 +280,7 @@ public class GameGhosts implements IGhostsController
 				//System.out.println(ghostPossibleDirs.length);
 				if(ghostPossibleDirs.length >0){
 					
-					int numOfPossibleDirs = Math.abs(Game.rnd.nextInt())%ghostPossibleDirs.length;
+					int numOfPossibleDirs = Math.abs(G.rnd.nextInt())%ghostPossibleDirs.length;
 					//System.out.println(numOfPossibleDirs);
 					if(numOfPossibleDirs < 0){
 						chosenDirection = ghostPossibleDirs[numOfPossibleDirs];

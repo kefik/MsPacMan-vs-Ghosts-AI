@@ -19,7 +19,7 @@ public class Link {
 		this.n1 = n1;
 		this.n2 = n2;
 		this.mazeNodes = mazeNodes;
-		distance = mazeNodes.length-1;
+		distance = mazeNodes.length+1;
 	}
 	
 	public Node getOtherEnd(Node node) {

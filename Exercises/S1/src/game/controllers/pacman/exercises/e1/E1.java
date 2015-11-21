@@ -9,6 +9,7 @@ import game.controllers.pacman.exercises.e1.path.IPathFinder;
 import game.controllers.pacman.exercises.e1.path.impl.BFS;
 import game.controllers.pacman.exercises.e1.path.impl.DFS;
 import game.controllers.pacman.exercises.e1.path.impl.UCS;
+import game.controllers.pacman.modules.Maze;
 import game.controllers.pacman.modules.Maze.MazeNode;
 import game.core.Game;
 import game.core.GameView;
@@ -107,21 +108,13 @@ public final class E1 extends PacManHijackController
 	
 	private void debugDraw(Game game) {
 		debugDrawGraph(game);
-		debugDrawPathFinder(game);
+		debugDrawPathFinder(game, pathFinder);
 	}
 	
 	private void debugDrawGraph(Game game) {
 		if (!drawGraph) return;
 		for (Link link : graph.getLinks()) {
 			link.debugDrawLink(game, Color.LIGHT_GRAY, Color.DARK_GRAY, true);
-		}
-	}
-	
-	private void debugDrawPathFinder(Game game) {
-		if (!drawPathFinder) return;
-		try {
-			debugDrawPathFinder(game, pathFinder);
-		} catch (Exception e) {			
 		}
 	}
 	
@@ -134,12 +127,12 @@ public final class E1 extends PacManHijackController
 		for (Node node : pathFinder.getClosedList()) {
 			GameView.addPoints(game, Color.LIGHT_GRAY, node.index);
 			Node parent = pathFinder.getParent(node);
-			if (parent != null) GameView.addLines(game, Color.LIGHT_GRAY, node.index, parent.index);
+			if (parent != null) debugDrawLine(game, node, parent, Color.LIGHT_GRAY);
 		}
 		for (Node node : pathFinder.getOpenList()) {
 			GameView.addPoints(game, Color.WHITE, node.index);
 			Node parent = pathFinder.getParent(node);
-			if (parent != null) GameView.addLines(game, Color.LIGHT_GRAY, node.index, parent.index);
+			if (parent != null) debugDrawLine(game, node, parent, Color.LIGHT_GRAY);
 		}
 		
 		GameView.addPoints(game, Color.RED, pathFinder.getStart().index);
@@ -149,10 +142,14 @@ public final class E1 extends PacManHijackController
 			Node node = pathFinder.getGoal();
 			while (node != null) {
 				Node parent = pathFinder.getParent(node);
-				if (parent != null) GameView.addLines(game, Color.YELLOW, node.index, parent.index);
+				if (parent != null) debugDrawLine(game, node, parent, Color.YELLOW);
 				node = parent;
 			}
 		}
+	}
+	
+	private void debugDrawLine(Game game, Node from, Node to, Color color) {
+		GameView.addLinesPath(game, color, from.index, to.index);		
 	}
 
 	// ============

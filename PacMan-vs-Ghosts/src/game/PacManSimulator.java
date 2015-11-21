@@ -6,6 +6,7 @@ import game.controllers.ghosts.game.GameGhosts;
 import game.controllers.pacman.HumanPacMan;
 import game.controllers.pacman.IPacManController;
 import game.controllers.pacman.PacManAction;
+import game.core.G;
 import game.core.Game;
 import game.core.GameView;
 import game.core.Replay;
@@ -13,6 +14,7 @@ import game.core._G_;
 
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.util.Random;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -24,7 +26,42 @@ import java.util.concurrent.Semaphore;
  */
 public class PacManSimulator {
 	
+	public static class GameConfig {
+		
+		public int seed = -1;
+		
+		/**
+		 * Whether POWER PILLS should be present within the environment.
+		 */
+		public boolean powerPillsEnabled = true;
+		
+		/**
+		 * Total percentage of PILLS present within the level. If < 1, some (random) pills will be taken away.
+		 */
+		public double totalPills = 1;
+		
+		/**
+		 * How many levels Ms PacMan may play (-1 => unbound).
+		 */
+		public int levelsToPlay = -1;
+
+		public String asString() {
+			return "" + seed + ";" + powerPillsEnabled + ";" + totalPills + ";" + levelsToPlay;
+		}
+		
+		public void fromString(String line) {
+			String[] all = line.split(";");
+			seed = Integer.parseInt(all[0]);
+			powerPillsEnabled = Boolean.parseBoolean(all[1]);
+			totalPills = Double.parseDouble(all[2]);
+			levelsToPlay = Integer.parseInt(all[3]);
+		}
+		
+	}
+	
 	public static class SimulatorConfig {
+		
+		public GameConfig game = new GameConfig();
 		
 		public boolean visualize = true;
 		public boolean visualizationScale2x = true;
@@ -62,9 +99,16 @@ public class PacManSimulator {
 		// RESET INSTANCE & SAVE CONFIG
 		reset(config);
 		
+		// INIT RANDOMNESS
+		if (config.game.seed <= 0) {
+			config.game.seed = new Random(System.currentTimeMillis()).nextInt();
+			while (config.game.seed < 0) config.game.seed += Integer.MAX_VALUE;
+		}
+		G.rnd = new Random(config.game.seed);
+		
 		// INITIALIZE THE SIMULATION
 		game = new _G_();
-		game.newGame();
+		game.newGame(config.game);
 		
 		// RESET CONTROLLERS
 		config.pacManController.reset(game);
@@ -175,6 +219,8 @@ public class PacManSimulator {
 		        
 		        // ADVANCE GAME
 		        if (advanceGame) {
+		        	int pacManLives = game.getLivesRemaining();
+		        	
 			        int replayStep[] = game.advanceGame(pacManAction, ghostsActions);
 			        
 			        // SAVE ACTIONS TO REPLAY
@@ -193,10 +239,15 @@ public class PacManSimulator {
 			    		
 			    		// FLUSH REPLAY DATA TO FILE
 			    		if (config.replay) {
-			    			Replay.saveActions(replayData.toString(), config.replayFile, replayFirstWrite);
+			    			Replay.saveActions(config.game, (config.ghostsController == null ? 0 : config.ghostsController.getGhostCount()), replayData.toString(), config.replayFile, replayFirstWrite);
 			        		replayFirstWrite = false;
 			        		replayData = new StringBuilder();
 			    		}
+			        }
+			        
+			        // PAC MAN KILLED?
+			        if (pacManLives != game.getLivesRemaining()) {
+			        	config.pacManController.killed();
 			        }
 		        }
 		        
@@ -212,7 +263,7 @@ public class PacManSimulator {
 			
 			// SAVE REPLAY DATA
 			if (config.replay) {
-				Replay.saveActions(replayData.toString(), config.replayFile, replayFirstWrite);
+				Replay.saveActions(config.game, (config.ghostsController == null ? 0 : config.ghostsController.getGhostCount()), replayData.toString(), config.replayFile, replayFirstWrite);
 			}
 			
 			// CLEAN UP
@@ -318,15 +369,23 @@ public class PacManSimulator {
 	}
 	
 	/**
-	 * Run simulation visualized.
+	 * Run simulation according to the configuration.
+	 * @param config
+	 * @return
+	 */
+	public static Game play(SimulatorConfig config) {
+		PacManSimulator simulator = new PacManSimulator();
+		return simulator.run(config);		
+	}
+	
+	/**
+	 * Run simulation visualized with ghosts.
 	 * @param pacMan
 	 * @param ghosts
 	 * @return
 	 */
 	public static Game play(IPacManController pacMan, IGhostsController ghosts) {
-		PacManSimulator simulator = new PacManSimulator();
-		
-		SimulatorConfig config = new SimulatorConfig();		
+		SimulatorConfig config = new SimulatorConfig();
 		
 		config.pacManController = pacMan;
 		config.ghostsController = ghosts;
@@ -334,7 +393,7 @@ public class PacManSimulator {
 		config.replay = true;
 		config.replayFile = new File("./replay.log");
 		
-		return simulator.run(config);		
+		return play(config);	
 	}
 	
 	/**
@@ -344,17 +403,7 @@ public class PacManSimulator {
 	 * @return
 	 */
 	public static Game play(IPacManController pacMan) {
-		PacManSimulator simulator = new PacManSimulator();
-		
-		SimulatorConfig config = new SimulatorConfig();		
-		
-		config.pacManController = pacMan;
-		config.ghostsController = null;
-		
-		config.replay = true;
-		config.replayFile = new File("./replay.log");
-		
-		return simulator.run(config);		
+		return play(pacMan, null);		
 	}
 	
 	/**
@@ -364,8 +413,6 @@ public class PacManSimulator {
 	 * @return
 	 */
 	public static Game simulate(IPacManController pacMan, IGhostsController ghosts) {
-		PacManSimulator simulator = new PacManSimulator();
-		
 		SimulatorConfig config = new SimulatorConfig();		
 		
 		config.visualize = false;
@@ -376,15 +423,24 @@ public class PacManSimulator {
 		config.replay = true;
 		config.replayFile = new File("./replay.log");
 		
-		return simulator.run(config);		
+		return play(config);		
 	}
 		
 	public static void main(String[] args) {
-		// PLAY WITH GHOSTS
-		play(new HumanPacMan(), new GameGhosts(false));
-		
 		// PLAY WITHOUT GHOSTS
 		//play(new HumanPacMan());
+		
+		// PLAY WITH 1 GHOST
+		// play(new HumanPacMan(), new GameGhosts(1, false));
+		
+		// PLAY WITH 2 GHOSTS
+		//play(new HumanPacMan(), new GameGhosts(2, false));
+		
+		// PLAY WITH 3 GHOSTS
+		//play(new HumanPacMan(), new GameGhosts(3, false));
+		
+		// PLAY WITH 4 GHOSTS
+		play(new HumanPacMan(), new GameGhosts(4, false));		
 	}
 	
 }

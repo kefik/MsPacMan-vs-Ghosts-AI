@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * TODO: 
- * TASK1: reimplement UNIFORM-COST-SEARCH into A-Star
+ * TASK1: turn implementation of UNIFORM-COST-SEARCH into A-Star
  * TASK2: include IGraphView
  *  
  * @author Jimmy
