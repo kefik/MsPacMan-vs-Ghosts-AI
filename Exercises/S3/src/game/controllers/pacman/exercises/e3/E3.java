@@ -10,9 +10,9 @@ import game.controllers.pacman.exercises.e3.graph.Link;
 import game.controllers.pacman.exercises.e3.graph.Node;
 import game.controllers.pacman.exercises.e3.search.IPathFinder;
 import game.controllers.pacman.exercises.e3.search.SearchLib;
-import game.controllers.pacman.exercises.e3.search.base.InformedNode;
 import game.controllers.pacman.exercises.e3.search.base.Path;
 import game.controllers.pacman.exercises.e3.search.base.SearchState;
+import game.controllers.pacman.exercises.e3.search.nodes.InformedNode;
 import game.controllers.pacman.modules.Maze.MazeNode;
 import game.core.Game;
 import game.core.GameView;
@@ -30,8 +30,14 @@ public final class E3 extends PacManHijackController
 	
 	private SearchLib search;
 	
+	/**
+	 * Node we're going from..
+	 */
 	private Node goFrom = null;
 	
+	/**
+	 * First link is the link we're navigating through.
+	 */
 	private List<Link> pathLinks = null;
 	
 	private boolean navigationRequest = false;
@@ -80,12 +86,18 @@ public final class E3 extends PacManHijackController
 			newNavigationRequest();					
 		}
 		
-		if (pathLinks != null) {
+		if (pathLinks != null) {			
+			
+			// LINK SWITCHING
 			if (maze.getPacManLocation() == goFrom.mazeNode) {
+				// IF WE ARE AT THE BEGINNING OF THE LINK
+				// => set the initial direction
 				pacman.set(pathLinks.get(0).getDirectionFrom(goFrom));
 			} else {
 				Link link = pathLinks.get(0);
+				// CHECK IF OUR LOCATION IS THE SAME AS THE END OF THE LINK
 				if (maze.getPacManLocation() == link.getOtherEnd(goFrom).mazeNode) {
+					// => switch to the next link
 					pathLinks.remove(0);
 					goFrom = link.getOtherEnd(goFrom);
 					if (pathLinks.size() > 0) {
@@ -94,6 +106,7 @@ public final class E3 extends PacManHijackController
 				}
 			}
 			
+			// NAVIGATING THROUGH CORRIDORS
 			if (pathLinks.size() == 0) {
 				pathLinks = null;
 			} else {			
@@ -159,7 +172,7 @@ public final class E3 extends PacManHijackController
 		MazeNode mazeNodeTo   = maze.getRandomNode();
 		
 		// PERFORM PATH-FINDING
-		Path path = search.shortestPath(mazeNodeFrom, mazeNodeTo);
+		Path path = search.pathThroughPills(mazeNodeFrom, mazeNodeTo);
 		if (path != null) {
 			this.goFrom = path.nodes[0];
 			this.pathLinks = path.copyLinks();
@@ -219,6 +232,7 @@ public final class E3 extends PacManHijackController
 		
 		GameView.addText(0, 0, Color.YELLOW, pathFinder.getName());
 		
+		/*
 		for (InformedNode node : (Collection<InformedNode>)pathFinder.getClosedList()) {
 			GameView.addPoints(game, Color.LIGHT_GRAY, node.node.index);
 			Node parent = ((InformedNode)(pathFinder.getParent(node.node))).node;
@@ -229,6 +243,7 @@ public final class E3 extends PacManHijackController
 			Node parent = ((InformedNode)(pathFinder.getParent(node.node))).node;
 			if (parent != null) debugDrawLine(game, node.node, parent, Color.LIGHT_GRAY);
 		}
+		*/
 		
 		GameView.addPoints(game, Color.RED, pathFinder.getStart().index);
 		GameView.addPoints(game, Color.GREEN, pathFinder.getGoal().index);
@@ -253,7 +268,7 @@ public final class E3 extends PacManHijackController
 		SimulatorConfig config = new SimulatorConfig();
 		
 		config.pacManController = new E3();
-		config.ghostsController = new GameGhosts(1);
+		config.ghostsController = new GameGhosts(0);
 		
 		config.replay = true;
 		config.replayFile = new File("./replay.log");

@@ -7,6 +7,7 @@ import game.controllers.pacman.exercises.e3.search.IGraphView;
 import game.controllers.pacman.exercises.e3.search.IPathFinder;
 import game.controllers.pacman.exercises.e3.search.ISearchGoal;
 import game.controllers.pacman.exercises.e3.search.ISearchStrategy;
+import game.controllers.pacman.exercises.e3.search.nodes.InformedNode;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -194,9 +195,13 @@ public class InformedSearch<WRAPPER extends InformedNode> implements IPathFinder
 		Collection<Link> links = getLinks(graph, expanding);
 
 		for (Link link : links) {
+			
+			if (view != null && !view.isLinkOpened(expanding.node, link)) continue;
 
 			Node currentNode = expanding.node;
 			Node nextNode = link.getOtherEnd(currentNode);
+			
+			if (view != null && !view.isNodeOpened(expanding.node)) continue;
 
 			int nextNodeGraphCost = getNodeGraphCost(nextNode, expanding);
 			int nextNodeExtraCost = getNodeViewCost(nextNode, expanding);
@@ -207,6 +212,10 @@ public class InformedSearch<WRAPPER extends InformedNode> implements IPathFinder
 
 			// CREATE OR GET FOR 'nextNode'
 			WRAPPER next = strategy.makeNode(nextNode, link, expanding, nextNodeGraphCost, nextNodeExtraCost, linkGraphCost, linkExtraCost, estimate);
+			
+			if (!view.isNodeOpened(next)) {
+				continue;
+			}
 			
 			int newPathCost = expanding.getPathCost() + nextNodeGraphCost + nextNodeExtraCost + linkGraphCost + linkExtraCost;
 

@@ -1,7 +1,7 @@
 package game.controllers.pacman.exercises.e3.search;
 
 
-import game.controllers.pacman.exercises.e3.search.base.InformedNode;
+import game.controllers.pacman.exercises.e3.search.nodes.InformedNode;
 
 import java.util.Collection;
 
@@ -79,6 +79,16 @@ public interface IGraphView<NODE, LINK, WRAPPER extends InformedNode> {
 	public boolean isNodeOpened(NODE node);
 	
 	/**
+	 * Nodes filter. Method defining which nodes are allowed to be explored / used by path finding algorithms, i.e., algorithm will never return path leading 
+	 * to such nodes. May be used to define "forbidden" nodes.
+	 * 
+	 * @param node
+	 * 
+	 * @return
+	 */
+	public boolean isNodeOpened(WRAPPER node);
+	
+	/**
 	 * Links filter. Method defining which "link" (oriented links between nodes) can be used for the purpose of path-planning. It can be used
 	 * to "forbid" usage of some link, that is you can rule out some link you do not want your agent to be able to travel through.
 	 * 
@@ -117,6 +127,11 @@ public interface IGraphView<NODE, LINK, WRAPPER extends InformedNode> {
 
 		@Override
 		public boolean isLinkOpened(NODE nodeFrom, LINK link) {
+			return true;
+		}
+
+		@Override
+		public boolean isNodeOpened(WRAPPER node) {
 			return true;
 		}
 

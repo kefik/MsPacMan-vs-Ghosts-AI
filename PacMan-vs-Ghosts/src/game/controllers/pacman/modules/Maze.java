@@ -293,6 +293,10 @@ public class Maze {
 			}
 			return Direction.NONE;
 		}
+
+		public Integer pillIndex() {
+			return game.getPillIndex(index);
+		}
 		
 	}
 	

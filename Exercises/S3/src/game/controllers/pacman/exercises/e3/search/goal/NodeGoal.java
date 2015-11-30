@@ -3,8 +3,8 @@ package game.controllers.pacman.exercises.e3.search.goal;
 import game.controllers.pacman.exercises.e3.graph.Link;
 import game.controllers.pacman.exercises.e3.graph.Node;
 import game.controllers.pacman.exercises.e3.search.ISearchGoal;
-import game.controllers.pacman.exercises.e3.search.base.InformedNode;
 import game.controllers.pacman.exercises.e3.search.base.InformedSearch;
+import game.controllers.pacman.exercises.e3.search.nodes.InformedNode;
 import game.core.Game;
 
 public class NodeGoal implements ISearchGoal<InformedNode> {

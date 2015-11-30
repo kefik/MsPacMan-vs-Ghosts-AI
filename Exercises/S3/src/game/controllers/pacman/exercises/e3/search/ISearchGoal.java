@@ -2,8 +2,8 @@ package game.controllers.pacman.exercises.e3.search;
 
 import game.controllers.pacman.exercises.e3.graph.Link;
 import game.controllers.pacman.exercises.e3.graph.Node;
-import game.controllers.pacman.exercises.e3.search.base.InformedNode;
 import game.controllers.pacman.exercises.e3.search.base.InformedSearch;
+import game.controllers.pacman.exercises.e3.search.nodes.InformedNode;
 
 public interface ISearchGoal<WRAPPER extends InformedNode> {
 	

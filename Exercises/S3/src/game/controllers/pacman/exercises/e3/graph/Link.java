@@ -21,6 +21,11 @@ public class Link {
 	
 	public final int distance;
 	
+	/**
+	 * @param n1
+	 * @param n2
+	 * @param mazeNodes contains n1 and n2 as well
+	 */
 	public Link(Node n1, Node n2, List<MazeNode> mazeNodes) {
 		this(n1, n2, mazeNodes.toArray(new MazeNode[mazeNodes.size()]));
 	}

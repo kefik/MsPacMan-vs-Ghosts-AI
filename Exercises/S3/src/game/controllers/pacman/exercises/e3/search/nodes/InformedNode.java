@@ -1,4 +1,4 @@
-package game.controllers.pacman.exercises.e3.search.base;
+package game.controllers.pacman.exercises.e3.search.nodes;
 
 import game.controllers.pacman.exercises.e3.graph.Link;
 import game.controllers.pacman.exercises.e3.graph.Node;
