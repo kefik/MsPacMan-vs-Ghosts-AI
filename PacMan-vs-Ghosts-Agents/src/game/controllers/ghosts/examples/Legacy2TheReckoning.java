@@ -13,6 +13,7 @@ public class Legacy2TheReckoning extends GhostsControllerBase
     
     public Legacy2TheReckoning()
     {
+    	super(Game.NUM_GHOSTS);
         dirs=new int[Game.NUM_GHOSTS];
     }
 

@@ -7,6 +7,10 @@ import game.core.Game;
 public final class RandomGhosts extends GhostsControllerBase
 {	
 	
+	public RandomGhosts() {
+		super(Game.NUM_GHOSTS);
+	}
+
 	@Override
 	public void tick(Game game, long timeDue) {
 		int[] directions=new int[Game.NUM_GHOSTS];
