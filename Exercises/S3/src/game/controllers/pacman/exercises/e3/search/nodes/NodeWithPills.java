@@ -7,6 +7,7 @@ public class NodeWithPills extends InformedNode {
 
 	protected int hashCode;
 	
+	// PILLS THAT ARE STILL WITHIN THE MAZE
 	// ASCENDING ORDER!
 	public Integer[] pills;
 
@@ -46,7 +47,7 @@ public class NodeWithPills extends InformedNode {
 		if (other.pills.length != pills.length) return false;
 		
 		for (int index = 0; index < pills.length; ++index) {
-			if (other.pills[index] != pills[index]) return false;
+			if (!other.pills[index].equals(pills[index])) return false;
 		}
 		
 		return true;

@@ -169,10 +169,11 @@ public final class E3 extends PacManHijackController
 	private void newNavigationRequest() {
 		// DECIDE ON THE PATH END POINTS
 		MazeNode mazeNodeFrom = maze.getPacManLocation();
-		MazeNode mazeNodeTo   = maze.getRandomNode();
+		MazeNode mazeNodeTo = maze.getRandomNode();
 		
 		// PERFORM PATH-FINDING
-		Path path = search.pathThroughPills(mazeNodeFrom, mazeNodeTo);
+		//Path path = search.pathThroughPills(mazeNodeFrom, mazeNodeTo);
+		Path path = search.bfsPills(mazeNodeFrom);
 		if (path != null) {
 			this.goFrom = path.nodes[0];
 			this.pathLinks = path.copyLinks();

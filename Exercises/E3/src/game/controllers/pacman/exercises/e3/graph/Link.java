@@ -39,7 +39,7 @@ public class Link {
 	}
 	
 	/**
-	 * Returns direction you should get from 'node' to begin travelling through this link.
+	 * Returns direction you should get from 'node' to begin traveling through this link.
 	 * @param node
 	 * @return
 	 */

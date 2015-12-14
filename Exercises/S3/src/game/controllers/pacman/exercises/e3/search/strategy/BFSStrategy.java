@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-public class AStarStrategyPills implements ISearchStrategy<NodeWithPills> {
+public class BFSStrategy implements ISearchStrategy<NodeWithPills> {
 	
 	public static class NodeWithPillsKey {
 		// ASCENDING ORDER!
@@ -66,7 +66,7 @@ public class AStarStrategyPills implements ISearchStrategy<NodeWithPills> {
 	
 	protected Map<NodeWithPillsKey, NodeWithPills> nodes = new HashMap<NodeWithPillsKey, NodeWithPills>();
 	
-	public AStarStrategyPills(Maze maze) {
+	public BFSStrategy(Maze maze) {
 		this.maze = maze;
 	}
 	
@@ -129,19 +129,12 @@ public class AStarStrategyPills implements ISearchStrategy<NodeWithPills> {
 
 	@Override
 	public Collection<NodeWithPills> createOpenList() {	
-		
-		return new PriorityQueue<NodeWithPills>(20, 
-			new Comparator<NodeWithPills>() {
-				@Override
-				public int compare(NodeWithPills o1, NodeWithPills o2) {
-					return (o1.getTotalCost() + o1.pills.length * 50) - (o2.getTotalCost() + o2.pills.length * 50);
-				}
-			});
+		return new ArrayList<NodeWithPills>();
 	}
 
 	@Override
 	public NodeWithPills selectNextNode(InformedSearch<NodeWithPills> search, Collection<NodeWithPills> openList) {
-		return ((PriorityQueue<NodeWithPills>)openList).peek();
+		return ((ArrayList<NodeWithPills>)openList).get(0);
 	}
 
 }

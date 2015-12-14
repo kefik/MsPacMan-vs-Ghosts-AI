@@ -25,7 +25,7 @@ public class NodeGoal implements ISearchGoal<InformedNode> {
 	}
 
 	@Override
-	public boolean isGoal(InformedSearch<InformedNode> search, InformedNode node) {
+	public boolean isGoal(InformedSearch<InformedNode> search, InformedNode node) {		
 		return node.node == end;
 	}
 

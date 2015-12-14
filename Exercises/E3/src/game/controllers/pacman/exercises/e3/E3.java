@@ -30,8 +30,10 @@ public final class E3 extends PacManHijackController
 	
 	private SearchLib search;
 	
+	// FIRST NODE OF CURRENTLY TRAVERSED LINK
 	private Node goFrom = null;
 	
+	// ONLY CURRENT+FUTURE LINKS
 	private List<Link> pathLinks = null;
 	
 	private boolean navigationRequest = false;
@@ -75,16 +77,20 @@ public final class E3 extends PacManHijackController
 	 */
 	@Override
 	public void tick(Game game, long timeDue) {
+		// SHOULD WE GENERATE NEW PATH?
 		if (navigationRequest || pathLinks == null || isDangerOnPath()) {
 			navigationRequest = false;
 			newNavigationRequest();					
 		}
 		
+		// PATH FOLLOWING
 		if (pathLinks != null) {
+			// PAC MAN AT THE BEGINNING OF THE LINK?
 			if (maze.getPacManLocation() == goFrom.mazeNode) {
 				pacman.set(pathLinks.get(0).getDirectionFrom(goFrom));
 			} else {
 				Link link = pathLinks.get(0);
+				// PAC MAN AT THE END OF THE LINK?
 				if (maze.getPacManLocation() == link.getOtherEnd(goFrom).mazeNode) {
 					pathLinks.remove(0);
 					goFrom = link.getOtherEnd(goFrom);
@@ -94,11 +100,13 @@ public final class E3 extends PacManHijackController
 				}
 			}
 			
+			// FOLLOW THE CURRENT LINK
 			if (pathLinks.size() == 0) {
 				pathLinks = null;
 			} else {			
 				// HANDLE CORNERS
 				MazeNode pacManNode = maze.getPacManLocation();
+				// IS IT (NOT) POSSIBLE TO CONTINUE WITH CURRENT PACMAN DIRECTION?
 				if (pacManNode.link(pacman.get()) == null) {
 					MazeNode nextNode = pacManNode.getRandomLink(previousNode);
 					Direction goToDir = pacManNode.direction(nextNode);
@@ -252,8 +260,11 @@ public final class E3 extends PacManHijackController
 	public static void main(String[] args) {
 		SimulatorConfig config = new SimulatorConfig();
 		
+		//config.game.seed = 10;
+		
 		config.pacManController = new E3();
 		config.ghostsController = new GameGhosts(1);
+		
 		
 		config.replay = true;
 		config.replayFile = new File("./replay.log");
