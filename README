@@ -6,6 +6,8 @@ PacMan-vs-Ghosts -> main project containing PacManSimulator (runnable as is), wh
 
 PacMan-vs-Ghosts-Agents -> example agents (both Ms PacMan and Ghosts), this project must reference PacMan-vs-Ghosts in order to compile ... start to develop your own agent by editting any of example agents
 
+PacMan-vs-Ghosts-Tournament -> console app that can be used to quickly evaluate agents (multiple seeds, multiple repetitions, output results to CSV)
+
 FEATURES:
 
 -- Fully working PacManSimulator that can run visualized / headless
@@ -15,6 +17,7 @@ FEATURES:
 -- Visualizer can be Scale2x
 -- draw custom debug info via GameView static methods
 -- you can run the game WITHOUT ghosts as well (in order to play with pathfinding only)
+-- you can use console app to quickly evaluate your agents
 
 EXERCISES:
 
