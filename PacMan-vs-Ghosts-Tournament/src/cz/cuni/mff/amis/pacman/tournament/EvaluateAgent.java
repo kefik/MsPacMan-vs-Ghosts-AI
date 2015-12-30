@@ -46,8 +46,23 @@ public class EvaluateAgent {
 		
 		PacManResults results = new PacManResults();
 		
+		resultDirFile.mkdirs();
+		File replayDir = new File(resultDirFile, "replays");
+		replayDir.mkdirs();
+		
 		for (int i = 0; i < runs.length; ++i) {
 			log(agentId, "LEVEL " + (i+1) + " / " + runs.length + " (" + oneLevelRepetitions + " repetitions)");
+			
+			if (runs[i].getConfig().config.replay) {
+				if (runs[i].getConfig().config.replayFile == null) {
+					runs[i].getConfig().config.replayFile = new File(replayDir, agentId + "-Run-" + i + ".replay");
+				} else {
+					String file = runs[i].getConfig().config.replayFile.getName();
+					int index = file.lastIndexOf(".");
+					String newFile = file.substring(0, index) + "-Run-" + i + "." + file.substring(index+1);
+					runs[i].getConfig().config.replayFile = new File(runs[i].getConfig().config.replayFile.getParentFile(), newFile);
+				}
+			}
 			
 			PacManRunResult result = runs[i].run(agent);
 			

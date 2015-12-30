@@ -32,7 +32,7 @@ public class PacManRunsGenerator {
 			SimulatorConfig config = prototypeOptions.clone();
 			
 			config.game.seed = seeds[i];
-			
+						
 			PacManConfig result = new PacManConfig();
 			
 			result.config = config;

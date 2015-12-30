@@ -282,7 +282,7 @@ public class EvaluateAgentConsole {
 	public static String[] getTestArgs() {
 		return new String[] {
 				  "-s", "20" // "seed"
-				, "-o", "-pp false -tp 0.6 -gc 1 -v false -2x true -p false -tt 40 -r false"   // prototype-options";
+				, "-o", "-pp false -tp 0.6 -gc 1 -v false -2x true -p false -tt 40 -r true"   // prototype-options";
 				, "-c", "5"  // level-count
 				, "-r", "5"  // one-run-repetitions
 				, "-p", "game.controllers.pacman.examples.NearestPillPacMan" // agent-fqcn ... requires MarioAI4J-Agents on classpath!
@@ -295,7 +295,7 @@ public class EvaluateAgentConsole {
 		// -----------
 		// FOR TESTING
 		// -----------
-		//args = getTestArgs();		
+		args = getTestArgs();		
 		
 		// --------------
 		// IMPLEMENTATION
