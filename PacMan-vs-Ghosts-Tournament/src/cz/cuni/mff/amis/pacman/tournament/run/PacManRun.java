@@ -31,7 +31,7 @@ public class PacManRun {
 			simulatorConfig.pacManController = pacMan;
 			
 			if (simulatorConfig.replay) {
-				String file =origReplayFile.getName();
+				String file = origReplayFile.getName();
 				int index = file.lastIndexOf(".");
 				String newFile = file.substring(0, index) + "-Iter-" + i + "." + file.substring(index+1);
 				simulatorConfig.replayFile = new File(origReplayFile.getParentFile(), newFile);
