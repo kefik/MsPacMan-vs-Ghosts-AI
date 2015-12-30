@@ -15,7 +15,9 @@ import game.core._G_;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 /**
  * One simulator can run one instance of PacMan-vs-Ghosts game.
@@ -44,6 +46,17 @@ public class PacManSimulator {
 		 * How many levels Ms PacMan may play (-1 => unbound).
 		 */
 		public int levelsToPlay = -1;
+		
+		public GameConfig clone() {
+			GameConfig result = new GameConfig();
+			
+			result.seed = seed;
+			result.powerPillsEnabled = powerPillsEnabled;
+			result.totalPills = totalPills;
+			result.levelsToPlay = levelsToPlay;
+			
+			return result;
+		}
 
 		public String asString() {
 			return "" + seed + ";" + powerPillsEnabled + ";" + totalPills + ";" + levelsToPlay;
@@ -56,31 +69,15 @@ public class PacManSimulator {
 			totalPills = Double.parseDouble(all[2]);
 			levelsToPlay = Integer.parseInt(all[3]);
 		}
+
+		public String getCSVHeader() {
+			return "seed;powerPillsEnabled;totalPills;levelsToPlay";
+		}
 		
-	}
-	
-	public static class SimulatorConfig {
+		public String getCSV() {
+			return "" + seed + ";" + powerPillsEnabled + ";" + totalPills + ";" + levelsToPlay;
+		}
 		
-		public GameConfig game = new GameConfig();
-		
-		public boolean visualize = true;
-		public boolean visualizationScale2x = true;
-		
-		public boolean mayBePaused = true;
-		
-		public IPacManController pacManController;
-		public IGhostsController ghostsController;
-		
-		/**
-		 * How long can PacMan / Ghost controller think about the game before we compute next frame.
-		 * If {@ #visualize} than it also determines the speed of the game.
-		 * 
-		 * DEFAULT: 25 FPS
-		 */
-		public int thinkTimeMillis = 40;
-		
-		public boolean replay = false;
-		public File replayFile = null;
 	}
 
 	private SimulatorConfig config;
@@ -96,6 +93,8 @@ public class PacManSimulator {
     private boolean replayFirstWrite;
 	
 	public synchronized Game run(final SimulatorConfig config) {
+		System.out.println("[PacManSimulator] RUNNING: " + config.getOptions());
+		
 		// RESET INSTANCE & SAVE CONFIG
 		reset(config);
 		
@@ -164,32 +163,20 @@ public class PacManSimulator {
 				due = System.currentTimeMillis() + config.thinkTimeMillis;
 				
 				// WAKE UP THINKING THREADS
+				thinkingLatch = new CountDownLatch(2);
+				
+				long start = System.currentTimeMillis();
+				
 				pacManThread.alert();
 				ghostsThread.alert();
 				
-				// GIVE THINKING TIME (BUSY WAITING ... TODO: we should know better!)
-		        try{
-		        	long start = System.currentTimeMillis();
+				// GIVE THINKING TIME
+		        try{		        	
 		        	boolean pacmanThinking = true;
 		        	boolean ghostsThinking = true;
-		        	while (System.currentTimeMillis() - start < config.thinkTimeMillis) {
-		        		long sleepTime = config.thinkTimeMillis - (System.currentTimeMillis() - start);
-		        		if (sleepTime > 40) sleepTime = 20;
-		        		Thread.sleep(sleepTime);		        		
-		        		if (pacmanThinking) {
-		        			if (pacManThread.thinking.tryAcquire()) {
-		        				pacManThread.thinking.release();
-		        				pacmanThinking = false;
-		        			}
-		        		}
-		        		if (ghostsThinking) {
-		        			if (ghostsThread.thinking.tryAcquire()) {
-		        				ghostsThread.thinking.release();
-		        				ghostsThinking = false;
-		        			}
-		        		}
-		        		if (!pacmanThinking && !ghostsThinking) break;
-		        	}	
+		        	
+		        	thinkingLatch.await(config.thinkTimeMillis, TimeUnit.MILLISECONDS);
+		        	
 		        	if (config.visualize) {
 		        		if (System.currentTimeMillis() - start < config.thinkTimeMillis) {
 		        			long sleepTime = config.thinkTimeMillis - (System.currentTimeMillis() - start);
@@ -200,6 +187,8 @@ public class PacManSimulator {
 		        	}
 		        } catch(Exception e) {		        	
 		        }
+		        
+		        thinkingLatch = null;
 		        
 		        // OBTAIN ACTIONS
 		        PacManAction  pacManAction  = config.pacManController.getAction().clone();
@@ -308,18 +297,18 @@ public class PacManSimulator {
 		
 	}
 	
+	private CountDownLatch thinkingLatch;
+	
 	private class ThinkingThread extends Thread 
 	{
 	    private IThinkingMethod method;
 	    private boolean alive;
-	    public Semaphore thinking;
-
+	    
 	    public ThinkingThread(String name, IThinkingMethod method) 
 	    {
 	    	super(name);
 	        this.method = method;
 	        alive=true;
-	        thinking = new Semaphore(1);
 	        start();
 	    }
 
@@ -342,22 +331,18 @@ public class PacManSimulator {
 		        	try {
 		        		synchronized(this)
 		        		{
-		        			wait(); // waked-up via alert()
+	        				wait(); // waked-up via alert()
 		                }
 		        	} catch(InterruptedException e)	{
 		                e.printStackTrace();
 		            }
 	
 		        	if (alive) {
-		        		boolean acquired = false;
+		        		method.think();
 		        		try {
-		        			thinking.acquire();
-		        			acquired = true;
-		        			method.think();   	 			
-		        		} catch (InterruptedException e) {
-		        			e.printStackTrace();
-		        		} finally {
-		        			if (acquired) thinking.release();
+		        			thinkingLatch.countDown();
+		        		} catch (Exception e) {
+		        			// thinkingLatch may be nullified...
 		        		}
 		        	} 
 		        	

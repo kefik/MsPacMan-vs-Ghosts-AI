@@ -1,7 +1,7 @@
 package game.controllers.pacman.exercises.e3;
 
 import game.PacManSimulator;
-import game.PacManSimulator.SimulatorConfig;
+import game.SimulatorConfig;
 import game.controllers.Direction;
 import game.controllers.ghosts.game.GameGhosts;
 import game.controllers.pacman.PacManHijackController;

@@ -1,7 +1,7 @@
 package game.controllers.pacman.exercises.e3;
 
 import game.PacManSimulator;
-import game.PacManSimulator.SimulatorConfig;
+import game.SimulatorConfig;
 import game.controllers.Direction;
 import game.controllers.ghosts.game.GameGhosts;
 import game.controllers.pacman.PacManHijackController;
@@ -12,7 +12,6 @@ import game.controllers.pacman.exercises.e3.search.IPathFinder;
 import game.controllers.pacman.exercises.e3.search.SearchLib;
 import game.controllers.pacman.exercises.e3.search.base.Path;
 import game.controllers.pacman.exercises.e3.search.base.SearchState;
-import game.controllers.pacman.exercises.e3.search.nodes.InformedNode;
 import game.controllers.pacman.modules.Maze.MazeNode;
 import game.core.Game;
 import game.core.GameView;
@@ -20,7 +19,6 @@ import game.core.GameView;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.Collection;
 import java.util.List;
 
 
