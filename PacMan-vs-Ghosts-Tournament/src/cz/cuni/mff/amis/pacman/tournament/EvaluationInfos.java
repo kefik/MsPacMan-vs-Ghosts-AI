@@ -53,7 +53,7 @@ public class EvaluationInfos {
 	}
 	
 	public String getCSVHeader() {
-		return "rounds;totalVictories;avgVictories;totalDeaths;avgDeaths;totalScore;avgScore;totalTimeSpent;avgTimeSpent";
+		return "resultCount;totalVictories;avgVictories;totalDeaths;avgDeaths;totalScore;avgScore;totalTimeSpent;avgTimeSpent";
 	}
 	
 	public String getCSV() {

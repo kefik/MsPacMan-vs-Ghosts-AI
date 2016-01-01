@@ -273,7 +273,7 @@ public class EvaluateAgentConsole {
 	private static void evaluateAgent() {
 		SimulatorConfig config = SimulatorConfig.fromOptions(simulatorOptions);
 		EvaluateAgent evaluate = new EvaluateAgent(seed, config, runCount, oneLevelRepetitions, resultDirFile);
-		evaluate.evaluateAgent(agentId, agent);		
+		evaluate.evaluateAgent(agentId, agentFQCN);		
 	}
 		
 	// ==============
@@ -282,8 +282,8 @@ public class EvaluateAgentConsole {
 	public static String[] getTestArgs() {
 		return new String[] {
 				  "-s", "20" // "seed"
-				, "-o", "-pp false -tp 0.6 -gc 1 -v false -2x true -p false -tt 40 -r true"   // prototype-options";
-				, "-c", "5"  // level-count
+				, "-o", "-pp false -tp 0.5 -gc 0 -lc 1 -v false -2x false -p false -tt 40 -r true"   // prototype-options";
+				, "-c", "5"  // run-count
 				, "-r", "5"  // one-run-repetitions
 				, "-p", "game.controllers.pacman.examples.NearestPillPacMan" // agent-fqcn ... requires MarioAI4J-Agents on classpath!
 				, "-i", "NearestPill"   // agent-id
@@ -295,7 +295,7 @@ public class EvaluateAgentConsole {
 		// -----------
 		// FOR TESTING
 		// -----------
-		args = getTestArgs();		
+		//args = getTestArgs();		
 		
 		// --------------
 		// IMPLEMENTATION

@@ -11,11 +11,11 @@ public class PacManRuns {
 		this.configs = configs;
 	}
 	
-	public synchronized PacManResults run(IPacManController pacMan) {
+	public synchronized PacManResults run(String pacManFQCN) {
 		PacManResults results = new PacManResults();
 		for (PacManConfig config : configs) {
 			PacManRun run = new PacManRun(config);
-			PacManRunResult result = run.run(pacMan);
+			PacManRunResult result = run.run(pacManFQCN);
 			results.addRunResults(result);
 		}
 		return results;

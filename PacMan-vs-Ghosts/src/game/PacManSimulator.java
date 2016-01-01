@@ -171,10 +171,7 @@ public class PacManSimulator {
 				ghostsThread.alert();
 				
 				// GIVE THINKING TIME
-		        try{		        	
-		        	boolean pacmanThinking = true;
-		        	boolean ghostsThinking = true;
-		        	
+		        try{		        			        	
 		        	thinkingLatch.await(config.thinkTimeMillis, TimeUnit.MILLISECONDS);
 		        	
 		        	if (config.visualize) {
@@ -186,6 +183,13 @@ public class PacManSimulator {
 		        		}
 		        	}
 		        } catch(Exception e) {		        	
+		        }
+		        
+		        if (pacManThread.thinking) {
+		        	System.out.println("[SIMULATOR] PacMan is still thinking!");
+		        }
+		        if (ghostsThread.thinking) {
+		        	System.out.println("[SIMULATOR] Ghosts are still thinking!");
 		        }
 		        
 		        thinkingLatch = null;
@@ -301,6 +305,7 @@ public class PacManSimulator {
 	
 	private class ThinkingThread extends Thread 
 	{
+		public boolean thinking = false;
 	    private IThinkingMethod method;
 	    private boolean alive;
 	    
@@ -338,7 +343,9 @@ public class PacManSimulator {
 		            }
 	
 		        	if (alive) {
+		        		thinking = true;
 		        		method.think();
+		        		thinking = false;
 		        		try {
 		        			thinkingLatch.countDown();
 		        		} catch (Exception e) {

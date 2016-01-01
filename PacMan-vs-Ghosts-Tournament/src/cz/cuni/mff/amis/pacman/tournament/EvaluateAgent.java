@@ -6,6 +6,7 @@ import game.controllers.pacman.IPacManController;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Constructor;
 
 import cz.cuni.mff.amis.pacman.tournament.run.PacManResults;
 import cz.cuni.mff.amis.pacman.tournament.run.PacManRun;
@@ -21,15 +22,15 @@ public class EvaluateAgent {
 	
 	private int runCount;
 	
-	private int oneLevelRepetitions;
+	private int oneRunRepetitions;
 	
 	private File resultDirFile;
 	
-	public EvaluateAgent(int seed, SimulatorConfig prototypeConfig, int runCount, int oneLevelRepetitions, File resultDirFile) {
+	public EvaluateAgent(int seed, SimulatorConfig prototypeConfig, int runCount, int oneRunRepetitions, File resultDirFile) {
 		this.seed = seed;
 		this.prototypeConfig = prototypeConfig;
 		this.runCount = runCount;
-		this.oneLevelRepetitions = oneLevelRepetitions;
+		this.oneRunRepetitions = oneRunRepetitions;
 		this.resultDirFile = resultDirFile;
 	}
 	
@@ -37,21 +38,23 @@ public class EvaluateAgent {
 		System.out.println("[" + agentId + "] " + msg);
 	}
 	
-	public void evaluateAgent(String agentId, IPacManController agent) {
+	public void evaluateAgent(String agentId, String agentFQCN) {
 		agentId = Sanitize.idify(agentId);
 		
-		log(agentId, "EVALUATING AGENT IN " + runCount + " LEVELS with " + oneLevelRepetitions + " level-repetition, TOTAL " + (runCount * oneLevelRepetitions) + " SIMULATIONS!");
+		log(agentId, "EVALUATING AGENT IN " + runCount + " RUNS with " + oneRunRepetitions + " repetition, TOTAL " + (runCount * oneRunRepetitions) + " SIMULATIONS!");
 		
-		PacManRun[] runs = PacManRunsGenerator.generateRunList(seed, prototypeConfig, runCount, oneLevelRepetitions);
+		PacManRun[] runs = PacManRunsGenerator.generateRunList(seed, prototypeConfig, runCount, oneRunRepetitions);
 		
 		PacManResults results = new PacManResults();
 		
 		resultDirFile.mkdirs();
 		File replayDir = new File(resultDirFile, "replays");
 		replayDir.mkdirs();
-		
+						
 		for (int i = 0; i < runs.length; ++i) {
-			log(agentId, "LEVEL " + (i+1) + " / " + runs.length + " (" + oneLevelRepetitions + " repetitions)");
+			long start = System.currentTimeMillis();
+			
+			log(agentId, "RUN " + (i+1) + " / " + runs.length + " (" + oneRunRepetitions + " repetitions)");
 			
 			if (runs[i].getConfig().config.replay) {
 				if (runs[i].getConfig().config.replayFile == null) {
@@ -64,11 +67,13 @@ public class EvaluateAgent {
 				}
 			}
 			
-			PacManRunResult result = runs[i].run(agent);
+			PacManRunResult result = runs[i].run(agentFQCN);
 			
 			log(agentId, "LEVEL " + (i+1) + " / " + runs.length + " SIMULATIONS FINISHED: " + result.toString());
 			
-			results.addRunResults(result);			
+			results.addRunResults(result);
+			
+			log(agentId, "TIME: " + (System.currentTimeMillis() - start) + "ms");
 		}
 		
 		log(agentId, "EVALUATION FINISHED!");
@@ -125,7 +130,7 @@ public class EvaluateAgent {
 		try {
 			writer = new PrintWriter(new FileOutputStream(file));
 			
-			writer.println("agentId;configNumber;" + results.getRunResults().get(0).getCSVHeader());
+			writer.println("agentId;runNumber;" + results.getRunResults().get(0).getCSVHeader());
 			int configNumber = 0;
 			for (PacManRunResult run : results.getRunResults()) {
 				++configNumber;
@@ -160,6 +165,8 @@ public class EvaluateAgent {
 			if (writer != null) writer.close();
 		}
 	}
+	
+	
 
 
 
