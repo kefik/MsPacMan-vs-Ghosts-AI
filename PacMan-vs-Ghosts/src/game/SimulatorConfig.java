@@ -64,7 +64,7 @@ public class SimulatorConfig {
 			   + " " + SimulatorConfigOption.GAME_POWER_PILLS.option + " " + game.powerPillsEnabled
 			   + " " + SimulatorConfigOption.GAME_SEED.option + " " + game.seed
 			   + " " + SimulatorConfigOption.GAME_TOTAL_PILLS.option + " " + game.totalPills
-			   + " " + SimulatorConfigOption.GAME_GHOST_COUNT.option + " " + ghostsController.getGhostCount()
+			   + " " + SimulatorConfigOption.GAME_GHOST_COUNT.option + " " + (ghostsController == null ? "N/A" : ghostsController.getGhostCount())
 			   + " " + SimulatorConfigOption.SIM_CAN_BE_PAUSED.option + " " + mayBePaused
 			   + " " + SimulatorConfigOption.SIM_REPLAY.option + " " + replay
 			   + (replayFile != null ? " " + SimulatorConfigOption.SIM_REPLAY_FILE.option + " " + replayFile.getAbsolutePath() : "")
