@@ -32,7 +32,7 @@ public final class E2 extends PacManHijackController
 	
 	private List<Node> path = null;
 	
-	private boolean navigationRequest = false;
+	private boolean navigationRequest = true;
 	
 	private MazeNode previousNode = null;
 	
@@ -91,6 +91,7 @@ public final class E2 extends PacManHijackController
 			}
 			if (path.size() == 0) {
 				path = null;
+				navigationRequest = true;
 			} else {			
 				// HANDLE CORNERS
 				MazeNode pacManNode = maze.getPacManLocation();
@@ -149,6 +150,8 @@ public final class E2 extends PacManHijackController
 		} else {
 			path = null;
 		}
+		
+		pathFinder = aStar;
 		
 	}
 	
