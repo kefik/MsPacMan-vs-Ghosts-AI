@@ -50,8 +50,12 @@ public final class GameView extends JComponent
     private Image offscreen; 
     private Scale2x scale2x;
     
+    public static GameView lastInstance;
+    
     public GameView(_G_ game)
     {
+    	this.lastInstance = this;
+    	
         this.game=game;
         images=loadImages();
         
@@ -298,6 +302,8 @@ public final class GameView extends JComponent
         	this.frame.setSize(frame.getWidth() * 2, frame.getHeight() * 2);
         	//this.frame.setPreferredSize(new Dimension(frame.getWidth() * 2, frame.getHeight() * 2));
         	this.frame.center();
+        	
+        	this.frame.setLocation(650, 10);
         }
         this.frame.setVisible(true);
               
