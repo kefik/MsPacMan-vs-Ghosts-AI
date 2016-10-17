@@ -7,13 +7,25 @@ import game.controllers.pacman.modules.Maze.NodeType;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Maze graph node (a junction / crossroad on the PacMan map).
+ */
 public class Node {
 	
+	/**
+	 * Unique index of the node.
+	 */
 	public final int index;
+	
+	/**
+	 * Type of sub-node within the Pac-Man maze.
+	 */
 	public final NodeType type;
 	
 	/**
 	 * Direction -> Link
+	 * 
+	 * Node that link is never stored for {@link Direction#NONE}.
 	 */
 	public Map<Direction, Link> links = new HashMap<Direction, Link>();
 	

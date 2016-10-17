@@ -4,7 +4,17 @@ import game.controllers.pacman.exercises.e1.graph.Graph;
 import game.controllers.pacman.exercises.e1.graph.Node;
 import game.controllers.pacman.exercises.e1.path.uninformed.DLS.DLSConfig;
 import game.controllers.pacman.exercises.e1.path.uninformed.base.SearchTreeNode;
+import game.controllers.pacman.exercises.e1.path.uninformed.base.UninformedGraphSearch;
 
+/**
+ * DEPTH-LIMITED-SEARCH
+ * 
+ * TODO: 
+ * 
+ * To make this work you need to:
+ * 1) implement {@link DFS},
+ * 2) which means to implement {@link UninformedGraphSearch#step()}.
+ */
 public class DLS extends DFS<DLSConfig> {
 	
 	private boolean depthLimitHit = false;

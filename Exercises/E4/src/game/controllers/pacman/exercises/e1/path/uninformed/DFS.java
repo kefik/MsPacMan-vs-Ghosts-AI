@@ -10,6 +10,10 @@ import game.controllers.pacman.exercises.e1.path.uninformed.base.SearchTreeNode;
 
 /**
  * DEAPTH-FIRST-SEARCH
+ * 
+ * TODO:
+ * 
+ * To make this work, you have to implement {@link UninformedGraphSearch#step()}.
  */
 public class DFS<PATH_FINDER_CONFIG> extends UninformedGraphSearch<PATH_FINDER_CONFIG> {
 

@@ -2,6 +2,9 @@ package game.controllers.pacman.exercises.e1.path.uninformed.base;
 
 import game.controllers.pacman.exercises.e1.graph.Node;
 
+/**
+ * Wrapper of the {@link node} within the search-tree of respective algorithms.
+ */
 public class SearchTreeNode {
 
 	/**
@@ -10,7 +13,8 @@ public class SearchTreeNode {
 	public Node node;
 	
 	/**
-	 * Current path cost to this node.
+	 * Current path cost to this node (cost of the path that leads
+	 * from the 'start node' to this node).
 	 */
 	public int pathCost;
 	

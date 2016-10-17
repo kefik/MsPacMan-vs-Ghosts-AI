@@ -10,6 +10,10 @@ import game.controllers.pacman.exercises.e1.path.uninformed.base.SearchTreeNode;
 
 /**
  * UNIFORM-COST-SEARCH
+ * 
+ * TODO:
+ * 
+ * To make this work, you have to implement {@link UninformedGraphSearch#step()}.
  */
 public class UCS extends UninformedGraphSearch<Object> {
 

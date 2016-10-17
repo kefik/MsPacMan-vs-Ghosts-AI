@@ -8,7 +8,18 @@ import game.controllers.pacman.exercises.e1.path.Path;
 import game.controllers.pacman.exercises.e1.path.PathFinderState;
 import game.controllers.pacman.exercises.e1.path.uninformed.base.UninformedGraphSearchBase;
 import game.controllers.pacman.exercises.e1.path.uninformed.base.SearchTreeNode;
+import game.controllers.pacman.exercises.e1.path.uninformed.base.UninformedGraphSearch;
 
+/**
+ * ITERATIVE DEEPENING SEARCH
+ * 
+ * TODO: 
+ * 
+ * To make this work you need to:
+ * 1) implement {@link DLS},
+ * 2) which means to implement {@link DFS},
+ * 3) which means to implement {@link UninformedGraphSearch#step()}.
+ */
 public class IDS extends UninformedGraphSearchBase<Object> {
 
 	private int currentLevel = 0;

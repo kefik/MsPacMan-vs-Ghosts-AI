@@ -10,12 +10,17 @@ import game.controllers.pacman.exercises.e1.graph.Node;
 import game.controllers.pacman.exercises.e1.path.Path;
 import game.controllers.pacman.exercises.e1.path.PathFinderState;
 import game.controllers.pacman.exercises.e1.path.uninformed.base.SearchTreeNode;
+import game.controllers.pacman.exercises.e1.path.uninformed.base.UninformedGraphSearch;
 import game.controllers.pacman.exercises.e1.path.uninformed.base.UninformedGraphSearchBase;
 
 /**
- * Bidirectional Search
- *
- * @param <PATH_FINDER_CONFIG>
+ * BIDIRECTIONAL SEARCH
+ * 
+ * TODO: 
+ * 
+ * To make this work you need to:
+ * 1) implement {@link BFS},
+ * 2) which means to implement {@link UninformedGraphSearch#step()}.
  */
 public class BDS extends UninformedGraphSearchBase<Object> {
 

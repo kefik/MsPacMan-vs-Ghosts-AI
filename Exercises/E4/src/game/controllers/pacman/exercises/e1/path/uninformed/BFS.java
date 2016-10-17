@@ -10,8 +10,10 @@ import game.controllers.pacman.exercises.e1.path.uninformed.base.SearchTreeNode;
 
 /**
  * BREADTH-FIRST-SEARCH
+ *
+ * TODO: 
  * 
- * @author Jimmy
+ * To make this work, you have to implement {@link UninformedGraphSearch#step()}.
  */
 public class BFS extends UninformedGraphSearch<Object> {
 

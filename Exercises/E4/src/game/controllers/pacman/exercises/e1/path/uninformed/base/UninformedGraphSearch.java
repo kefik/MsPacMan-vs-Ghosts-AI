@@ -116,8 +116,39 @@ public abstract class UninformedGraphSearch<PATH_FINDER_CONFIG> extends Uninform
 		
 		++steps;
 		
-		// TODO: implement me!
+		// TODO: implement Graph-Search algorithm template
 		
+		//  -- uninformed graph search strategy is implemented via
+		//  ---- createCloseList() ~ storage for expanded nodes
+		//  ---- createOpenList()  ~ tells us how fringe stores nodes
+		//  ---- selectNextNode()  ~ tells us which node to choose for the
+		//                           expansion next
+		//  -- use makeSearchNode(node, pathCost, parent) instead of manual new SearchTreeNode
+		
+		// GRAPH ALGORITHM SKELETON
+		// 1) fringe ~ open list empty? => PATH NOT FOUND
+		// 2) choose node for the evaluation (use selectNextNode(opened))
+		// 3) is it goal? => PATH FOUND
+		// 4) expand the node
+		//    -- mind the fact we're searching within the graph
+		//    -- be sure to handle cycles correctly
+		
+		// Notes:
+		//   1) if you wish indicate that the search has ended
+		//      you have to set this.state not only return the new state
+		//      e.g. do: return this.state = PathFinderState.PATH_FOUND;
+		//   2) do not forget to correctly initialize this.path
+		//      after you find the path, see {@link IPathFinder#getPath()}
+		//      for more info how {@link Path} object should be initialized
+		//      ... you will probably want to utilize this.getParent(node) for that
+		//   3) SearchTreeNode links can be retrieved via searchTreeNode.node.links
+		//   4) SearchTreeNode instances can be checked for equality using .equals()
+		//   5) Node instances can be checked for equality using operator '==' 
+		//      (.equals() will work as well)
+		//   6) Start and Goal nodes are stored within this.start, this.end respectively
+		//   7) for given "Node node" you can retrieve SearchTreeNode via
+		//      "nodes.get(node)"
+				
 		return state;
 	}
 	
