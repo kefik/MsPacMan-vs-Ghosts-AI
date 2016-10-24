@@ -18,12 +18,28 @@ public abstract class UninformedGraphSearch<PATH_FINDER_CONFIG> extends Uninform
 	
 	// RUNTIME
 	
+	/**
+	 * This is cache (map) of nodes we have touched so far.
+	 * "maze node" -> "search tree node"
+	 */
 	protected Map<Node, SearchTreeNode> nodes;
+	
+	/**
+	 * Nodes we have expanded.
+	 */
 	protected Collection<SearchTreeNode> closed;
+	
+	/**
+	 * Nodes that makes our "fringe" we're choosing a node
+	 * for expansion from.
+	 */
 	protected Collection<SearchTreeNode> opened;
 	
 	// RESULT
 	
+	/**
+	 * Once you find a path, cache it here.
+	 */
 	protected Path path;
 	
 	// ==================
@@ -47,7 +63,7 @@ public abstract class UninformedGraphSearch<PATH_FINDER_CONFIG> extends Uninform
 	
 	/**
 	 * Selects next {@link SearchTreeNode} to evaluate next.
-	 * @param openList
+	 * @param openList supply {@link #opened} here
 	 * @return
 	 */
 	protected abstract SearchTreeNode selectNextNode(Collection<SearchTreeNode> openList);
@@ -116,26 +132,33 @@ public abstract class UninformedGraphSearch<PATH_FINDER_CONFIG> extends Uninform
 		
 		++steps;
 		
-		// TODO: implement Graph-Search algorithm template
+		// TODO: implement me!
+		//       This should implement SINGLE STEP of the search algorithm!
+
+		// Graph-Search algorithm template:
 		
 		//  -- uninformed graph search strategy is implemented via
 		//  ---- createCloseList() ~ storage for expanded nodes
 		//  ---- createOpenList()  ~ tells us how fringe stores nodes
+		//         +-- note that "start" node is already within the open list when step() is
+		//             is called for the first time
 		//  ---- selectNextNode()  ~ tells us which node to choose for the
 		//                           expansion next
 		//  -- use makeSearchNode(node, pathCost, parent) instead of manual new SearchTreeNode
 		
-		// GRAPH ALGORITHM SKELETON
-		// 1) fringe ~ open list empty? => PATH NOT FOUND
+		// GRAPH ALGORITHM STEP SKELETON
+		// 1) fringe (aka open list) empty? => PATH NOT FOUND
 		// 2) choose node for the evaluation (use selectNextNode(opened))
 		// 3) is it goal? => PATH FOUND
 		// 4) expand the node
 		//    -- mind the fact we're searching within the graph
 		//    -- be sure to handle cycles correctly
+		//       -- you have to correctly update SearchTreeNode in case
+		//          you're moving nodes from "closed" to "opened" list
 		
 		// Notes:
 		//   1) if you wish indicate that the search has ended
-		//      you have to set this.state not only return the new state
+		//      you have to set this.state, not only to return the new state
 		//      e.g. do: return this.state = PathFinderState.PATH_FOUND;
 		//   2) do not forget to correctly initialize this.path
 		//      after you find the path, see {@link IPathFinder#getPath()}
@@ -146,8 +169,7 @@ public abstract class UninformedGraphSearch<PATH_FINDER_CONFIG> extends Uninform
 		//   5) Node instances can be checked for equality using operator '==' 
 		//      (.equals() will work as well)
 		//   6) Start and Goal nodes are stored within this.start, this.end respectively
-		//   7) for given "Node node" you can retrieve SearchTreeNode via
-		//      "nodes.get(node)"
+		//   7) for given "Node node" you can retrieve SearchTreeNode via "nodes.get(node)"
 				
 		return state;
 	}
@@ -165,12 +187,22 @@ public abstract class UninformedGraphSearch<PATH_FINDER_CONFIG> extends Uninform
 	// IPathFinder INTERMEDIATE STATE Implementation
 	// =============================================
 	
+	/**
+	 * Returns a 'node' parent on the path. 'node' parent is stored within {@link SearchTreeNode}.
+	 * @param node
+	 * @return node parent on the path
+	 */
 	@Override
 	public Node getParent(Node node) {
 		SearchTreeNode search = nodes.get(node);
 		return search == null || search.parent == null ? null : search.parent.node;
 	}
 	
+	/**
+	 * Returns extra search info we store for given 'node'
+	 * @param node
+	 * @return extra info about 'node' search node
+	 */
 	@Override
 	public SearchTreeNode getNodeInfo(Node node) {
 		return nodes.get(node);

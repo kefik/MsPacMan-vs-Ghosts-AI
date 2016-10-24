@@ -20,10 +20,12 @@ import game.controllers.pacman.exercises.e1.path.uninformed.UCS;
 import game.core.Game;
 import game.core.GameView;
 
-
 public final class E4 extends PacManHijackController
 {
 	private Graph graph;
+	
+	private Node startNode;
+	private Node goalNode;
 	
 	private DFS<Object> dfs = new DFS<Object>();
 	private BFS bfs = new BFS();	
@@ -75,6 +77,8 @@ public final class E4 extends PacManHijackController
 	// DEBUGGING STUFF
 	// ===============
 	
+	private boolean comparePathFinders = false;
+	
 	private boolean drawGraph = false;
 	private boolean drawPathFinder = true;
 	
@@ -94,41 +98,82 @@ public final class E4 extends PacManHijackController
 		if (key == KeyEvent.VK_N && pacman.pauseSimulation) {
 			if (pathFinder != null && pathFinder.getState() == PathFinderState.RUNNING) pathFinder.step();
 		}
-		if (key == KeyEvent.VK_1) {
-			pathFinder = dfs;
-			pathFinder.reset();
-			pathFinder.init(graph, graph.getRandomNode(), graph.getRandomNode(), null);
+		if (key == KeyEvent.VK_C) {
+			comparePathFinders = !comparePathFinders;
+			if (comparePathFinders) {
+				solveAll();
+			}
 		}
-		if (key == KeyEvent.VK_2) {
-			pathFinder = bfs;
-			pathFinder.reset();
-			pathFinder.init(graph, graph.getRandomNode(), graph.getRandomNode(), null);
+		
+		if (!comparePathFinders) {
+			if (key == KeyEvent.VK_1 || key == KeyEvent.VK_NUMPAD1) {
+				pathFinder = dfs;
+				reinitPathFinder();
+			}
+			if (key == KeyEvent.VK_2 || key == KeyEvent.VK_NUMPAD2) {
+				pathFinder = bfs;
+				reinitPathFinder();
+			}
+			if (key == KeyEvent.VK_3 || key == KeyEvent.VK_NUMPAD3) {
+				pathFinder = ucs;
+				reinitPathFinder();
+			}
+			if (key == KeyEvent.VK_4 || key == KeyEvent.VK_NUMPAD4) {
+				pathFinder = dls;
+				reinitPathFinder();
+			}
+			if (key == KeyEvent.VK_5 || key == KeyEvent.VK_NUMPAD5) {
+				pathFinder = ids;
+				reinitPathFinder();
+			}
+			if (key == KeyEvent.VK_6 || key == KeyEvent.VK_NUMPAD6) {
+				pathFinder = bds;
+				reinitPathFinder();
+			}
 		}
-		if (key == KeyEvent.VK_3) {
-			pathFinder = ucs;
-			pathFinder.reset();
-			pathFinder.init(graph, graph.getRandomNode(), graph.getRandomNode(), null);
+	}
+	
+	private void generateNewStartGoal() {
+		startNode = graph.getRandomNode();
+		goalNode = graph.getRandomNode();
+	}
+	
+	private void reinitPathFinder() {
+		pathFinder.reset();
+		generateNewStartGoal();
+		
+		if (pathFinder == dls) {
+			pathFinder.init(graph, startNode, goalNode, new DLS.DLSConfig(3));
+		} else {
+			pathFinder.init(graph, startNode, goalNode, null);
 		}
-		if (key == KeyEvent.VK_4) {
-			pathFinder = dls;
-			pathFinder.reset();
-			pathFinder.init(graph, graph.getRandomNode(), graph.getRandomNode(), new DLS.DLSConfig(3));
+	}
+	
+	private void solveOne(IPathFinder pathFinder) {
+		if (startNode == null) generateNewStartGoal();
+		pathFinder.init(graph, startNode, goalNode, null);
+		while (pathFinder.getState() == PathFinderState.RUNNING) {
+			pathFinder.step();
 		}
-		if (key == KeyEvent.VK_5) {
-			pathFinder = ids;
-			pathFinder.reset();
-			pathFinder.init(graph, graph.getRandomNode(), graph.getRandomNode(), null);
-		}
-		if (key == KeyEvent.VK_6) {
-			pathFinder = bds;
-			pathFinder.reset();
-			pathFinder.init(graph, graph.getRandomNode(), graph.getRandomNode(), null);
-		}
+	}
+	
+	private void solveAll() {
+		generateNewStartGoal();
+
+		solveOne(dfs);
+		solveOne(bfs);
+		solveOne(ucs);
+		solveOne(ids);
+		solveOne(bds);
 	}
 	
 	private void debugDraw(Game game) {
 		debugDrawGraph(game);
-		debugDrawPathFinder(game, pathFinder);
+		if (comparePathFinders) {
+			debugDrawComparePathFinders(game);
+		} else {
+			debugDrawPathFinder(game, pathFinder);
+		}
 	}
 	
 	private void debugDrawGraph(Game game) {
@@ -170,6 +215,33 @@ public final class E4 extends PacManHijackController
 				for (int i = 1; i < path.path.length; ++i) {
 					debugDrawLine(game, path.path[i-1], path.path[i], Color.YELLOW);
 				}			
+			}
+		}
+	}
+	
+	private void debugDrawComparePathFinders(Game game) {
+		if (!drawPathFinder) return;
+		if (startNode == null) return; 
+		
+		GameView.addText(0, 0, Color.YELLOW, "COMPARE");
+		
+		GameView.addPoints(game, Color.RED, startNode.index);
+		GameView.addPoints(game, Color.GREEN, goalNode.index);
+		
+		IPathFinder[] pathFinders = new IPathFinder[]{ dfs, bfs, ucs, ids, bds };
+		Color[] colors = new Color[]{ Color.red, Color.blue, Color.green, Color.yellow, Color.magenta };
+		
+		for (int i = 0; i < pathFinders.length; ++i) {
+			IPathFinder pathFinder = pathFinders[i];
+			Color color = (i >= 0 && i < colors.length ? colors[i] : Color.WHITE);
+			if (pathFinder.getState() == PathFinderState.PATH_FOUND) {
+				Path path = pathFinder.getPath();
+				if (path != null) {
+					for (int j = 1; j < path.path.length; ++j) {
+						debugDrawLine(game, path.path[j-1], path.path[j], color);
+					}			
+				}
+				GameView.addText(0, (i+1)*6, color, pathFinder.getName() + ": path = " + pathFinder.getPath().computeCost());
 			}
 		}
 	}
