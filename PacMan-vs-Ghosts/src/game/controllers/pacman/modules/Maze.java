@@ -298,6 +298,11 @@ public class Maze {
 			return game.getPillIndex(index);
 		}
 		
+		@Override
+		public String toString() {
+			return "MazeNode[index=" + index + "]";
+		}
+		
 	}
 	
 	private Game game;
