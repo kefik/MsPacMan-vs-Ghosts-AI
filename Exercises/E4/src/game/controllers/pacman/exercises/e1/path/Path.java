@@ -8,7 +8,7 @@ import game.controllers.pacman.exercises.e1.graph.Node;
 
 public class Path {
 
-	public final Node[] path;
+	public Node[] path;
 	
 	public Path(Node... path) {
 		this.path = path;
@@ -23,6 +23,7 @@ public class Path {
 		for (int i = path.length - 1; i >= 0; --i) {
 			pathReverse[path.length - 1 - i] = path[i];
 		}
+		path = pathReverse;
 	}
 	
 	public int computeCost() {
@@ -40,4 +41,16 @@ public class Path {
 		return result;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("[");
+		for (Node n : path) {
+			sb.append(n.toString());
+			sb.append(", ");
+		}
+		sb.deleteCharAt(sb.length() -1);
+		sb.deleteCharAt(sb.length() -1);
+		sb.append("]");
+		return sb.toString();
+	}
 }
