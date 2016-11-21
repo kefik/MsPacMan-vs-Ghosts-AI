@@ -1,6 +1,6 @@
-package game.controllers.pacman.exercises.e1.path.uninformed.base;
+package game.controllers.pacman.exercises.e4.path.uninformed.base;
 
-import game.controllers.pacman.exercises.e1.graph.Node;
+import game.controllers.pacman.exercises.e4.graph.Node;
 
 /**
  * Wrapper of the {@link node} within the search-tree of respective algorithms.

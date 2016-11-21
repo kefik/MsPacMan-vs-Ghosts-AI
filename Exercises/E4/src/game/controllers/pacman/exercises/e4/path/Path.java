@@ -1,14 +1,14 @@
-package game.controllers.pacman.exercises.e1.path;
+package game.controllers.pacman.exercises.e4.path;
 
 import java.util.Collection;
 
-import game.controllers.pacman.exercises.e1.graph.Link;
-import game.controllers.pacman.exercises.e1.graph.Node;
+import game.controllers.pacman.exercises.e4.graph.Link;
+import game.controllers.pacman.exercises.e4.graph.Node;
 
 
 public class Path {
 
-	public final Node[] path;
+	public Node[] path;
 	
 	public Path(Node... path) {
 		this.path = path;
@@ -23,8 +23,9 @@ public class Path {
 		for (int i = path.length - 1; i >= 0; --i) {
 			pathReverse[path.length - 1 - i] = path[i];
 		}
+	    this.path = pathReverse;
 	}
-	
+
 	public int computeCost() {
 		int result = 0;
 		for (int i = 1; i < path.length; ++i) {

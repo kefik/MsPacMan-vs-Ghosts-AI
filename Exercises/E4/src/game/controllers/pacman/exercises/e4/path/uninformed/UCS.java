@@ -1,12 +1,12 @@
-package game.controllers.pacman.exercises.e1.path.uninformed;
+package game.controllers.pacman.exercises.e4.path.uninformed;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
-import game.controllers.pacman.exercises.e1.path.uninformed.base.UninformedGraphSearch;
-import game.controllers.pacman.exercises.e1.path.uninformed.base.SearchTreeNode;
+import game.controllers.pacman.exercises.e4.path.uninformed.base.SearchTreeNode;
+import game.controllers.pacman.exercises.e4.path.uninformed.base.UninformedGraphSearch;
 
 /**
  * UNIFORM-COST-SEARCH

@@ -169,7 +169,9 @@ public class InformedSearch<NODE extends INode, LINK extends ILink<NODE>, SEARCH
 		
 		++steps;
 		
-		// TODO: implement
+		// TODO: implement + you must take care of IGraphView / ISearchStrategy
+		//       use ISearchGoal for goal test
+		//  	 to create SEARCH_NODE use strategy.makeSearchNode(...)
 		
 		return state = PathFinderState.PATH_NOT_FOUND;
 	}

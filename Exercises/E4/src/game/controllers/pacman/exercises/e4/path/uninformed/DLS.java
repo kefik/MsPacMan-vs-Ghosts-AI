@@ -1,10 +1,10 @@
-package game.controllers.pacman.exercises.e1.path.uninformed;
+package game.controllers.pacman.exercises.e4.path.uninformed;
 
-import game.controllers.pacman.exercises.e1.graph.Graph;
-import game.controllers.pacman.exercises.e1.graph.Node;
-import game.controllers.pacman.exercises.e1.path.uninformed.DLS.DLSConfig;
-import game.controllers.pacman.exercises.e1.path.uninformed.base.SearchTreeNode;
-import game.controllers.pacman.exercises.e1.path.uninformed.base.UninformedGraphSearch;
+import game.controllers.pacman.exercises.e4.graph.Graph;
+import game.controllers.pacman.exercises.e4.graph.Node;
+import game.controllers.pacman.exercises.e4.path.uninformed.DLS.DLSConfig;
+import game.controllers.pacman.exercises.e4.path.uninformed.base.SearchTreeNode;
+import game.controllers.pacman.exercises.e4.path.uninformed.base.UninformedGraphSearch;
 
 /**
  * DEPTH-LIMITED-SEARCH

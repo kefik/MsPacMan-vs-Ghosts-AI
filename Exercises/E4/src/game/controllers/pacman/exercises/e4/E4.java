@@ -1,22 +1,22 @@
-package game.controllers.pacman.exercises.e1;
+package game.controllers.pacman.exercises.e4;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 
 import game.PacManSimulator;
 import game.controllers.pacman.PacManHijackController;
-import game.controllers.pacman.exercises.e1.graph.Graph;
-import game.controllers.pacman.exercises.e1.graph.Link;
-import game.controllers.pacman.exercises.e1.graph.Node;
-import game.controllers.pacman.exercises.e1.path.IPathFinder;
-import game.controllers.pacman.exercises.e1.path.Path;
-import game.controllers.pacman.exercises.e1.path.PathFinderState;
-import game.controllers.pacman.exercises.e1.path.uninformed.BDS;
-import game.controllers.pacman.exercises.e1.path.uninformed.BFS;
-import game.controllers.pacman.exercises.e1.path.uninformed.DFS;
-import game.controllers.pacman.exercises.e1.path.uninformed.DLS;
-import game.controllers.pacman.exercises.e1.path.uninformed.IDS;
-import game.controllers.pacman.exercises.e1.path.uninformed.UCS;
+import game.controllers.pacman.exercises.e4.graph.Graph;
+import game.controllers.pacman.exercises.e4.graph.Link;
+import game.controllers.pacman.exercises.e4.graph.Node;
+import game.controllers.pacman.exercises.e4.path.IPathFinder;
+import game.controllers.pacman.exercises.e4.path.Path;
+import game.controllers.pacman.exercises.e4.path.PathFinderState;
+import game.controllers.pacman.exercises.e4.path.uninformed.BDS;
+import game.controllers.pacman.exercises.e4.path.uninformed.BFS;
+import game.controllers.pacman.exercises.e4.path.uninformed.DFS;
+import game.controllers.pacman.exercises.e4.path.uninformed.DLS;
+import game.controllers.pacman.exercises.e4.path.uninformed.IDS;
+import game.controllers.pacman.exercises.e4.path.uninformed.UCS;
 import game.core.Game;
 import game.core.GameView;
 

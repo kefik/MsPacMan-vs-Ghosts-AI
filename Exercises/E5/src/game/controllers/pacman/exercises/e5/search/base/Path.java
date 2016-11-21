@@ -45,9 +45,12 @@ public class Path<NODE extends INode, LINK extends ILink<NODE>> {
 		for (int i = path.length - 1; i >= 0; --i) {
 			pathReverse[path.length - 1 - i] = path[i];
 		}
+		this.path = pathReverse;
+		
 		NODE temp = end;
 		this.end = start;
 		this.start = temp;
+		
 		this.nodes = computeNodes();
 	}
 	

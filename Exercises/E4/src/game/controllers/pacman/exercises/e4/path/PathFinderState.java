@@ -1,4 +1,4 @@
-package game.controllers.pacman.exercises.e1.path;
+package game.controllers.pacman.exercises.e4.path;
 
 public enum PathFinderState {
 

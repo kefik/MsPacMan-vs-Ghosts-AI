@@ -1,4 +1,4 @@
-package game.controllers.pacman.exercises.e1.graph;
+package game.controllers.pacman.exercises.e4.graph;
 
 import game.controllers.Direction;
 import game.controllers.pacman.modules.Maze;

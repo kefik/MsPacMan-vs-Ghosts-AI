@@ -1,10 +1,10 @@
-package game.controllers.pacman.exercises.e1.path;
-
-import game.controllers.pacman.exercises.e1.graph.Graph;
-import game.controllers.pacman.exercises.e1.graph.Node;
-import game.controllers.pacman.exercises.e1.path.uninformed.base.SearchTreeNode;
+package game.controllers.pacman.exercises.e4.path;
 
 import java.util.Collection;
+
+import game.controllers.pacman.exercises.e4.graph.Graph;
+import game.controllers.pacman.exercises.e4.graph.Node;
+import game.controllers.pacman.exercises.e4.path.uninformed.base.SearchTreeNode;
 
 /**
  * Incremental path-finder.

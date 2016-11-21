@@ -1,14 +1,14 @@
-package game.controllers.pacman.exercises.e1.path.uninformed;
+package game.controllers.pacman.exercises.e4.path.uninformed;
 
 import java.util.Collection;
 
-import game.controllers.pacman.exercises.e1.graph.Graph;
-import game.controllers.pacman.exercises.e1.graph.Node;
-import game.controllers.pacman.exercises.e1.path.Path;
-import game.controllers.pacman.exercises.e1.path.PathFinderState;
-import game.controllers.pacman.exercises.e1.path.uninformed.base.UninformedGraphSearchBase;
-import game.controllers.pacman.exercises.e1.path.uninformed.base.SearchTreeNode;
-import game.controllers.pacman.exercises.e1.path.uninformed.base.UninformedGraphSearch;
+import game.controllers.pacman.exercises.e4.graph.Graph;
+import game.controllers.pacman.exercises.e4.graph.Node;
+import game.controllers.pacman.exercises.e4.path.Path;
+import game.controllers.pacman.exercises.e4.path.PathFinderState;
+import game.controllers.pacman.exercises.e4.path.uninformed.base.SearchTreeNode;
+import game.controllers.pacman.exercises.e4.path.uninformed.base.UninformedGraphSearch;
+import game.controllers.pacman.exercises.e4.path.uninformed.base.UninformedGraphSearchBase;
 
 /**
  * ITERATIVE DEEPENING SEARCH
