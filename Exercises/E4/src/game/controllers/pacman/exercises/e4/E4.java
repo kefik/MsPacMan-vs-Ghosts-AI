@@ -106,27 +106,27 @@ public final class E4 extends PacManHijackController
 		}
 		
 		if (!comparePathFinders) {
-			if (key == KeyEvent.VK_1 || key == KeyEvent.VK_NUMPAD1) {
+			if (key == KeyEvent.VK_1 || key == KeyEvent.VK_NUMPAD1 || key == KeyEvent.VK_F1) {
 				pathFinder = dfs;
 				reinitPathFinder();
 			}
-			if (key == KeyEvent.VK_2 || key == KeyEvent.VK_NUMPAD2) {
+			if (key == KeyEvent.VK_2 || key == KeyEvent.VK_NUMPAD2 || key == KeyEvent.VK_F2) {
 				pathFinder = bfs;
 				reinitPathFinder();
 			}
-			if (key == KeyEvent.VK_3 || key == KeyEvent.VK_NUMPAD3) {
+			if (key == KeyEvent.VK_3 || key == KeyEvent.VK_NUMPAD3 || key == KeyEvent.VK_F3) {
 				pathFinder = ucs;
 				reinitPathFinder();
 			}
-			if (key == KeyEvent.VK_4 || key == KeyEvent.VK_NUMPAD4) {
+			if (key == KeyEvent.VK_4 || key == KeyEvent.VK_NUMPAD4 || key == KeyEvent.VK_F4) {
 				pathFinder = dls;
 				reinitPathFinder();
 			}
-			if (key == KeyEvent.VK_5 || key == KeyEvent.VK_NUMPAD5) {
+			if (key == KeyEvent.VK_5 || key == KeyEvent.VK_NUMPAD5 || key == KeyEvent.VK_F5) {
 				pathFinder = ids;
 				reinitPathFinder();
 			}
-			if (key == KeyEvent.VK_6 || key == KeyEvent.VK_NUMPAD6) {
+			if (key == KeyEvent.VK_6 || key == KeyEvent.VK_NUMPAD6 || key == KeyEvent.VK_F6) {
 				pathFinder = bds;
 				reinitPathFinder();
 			}
