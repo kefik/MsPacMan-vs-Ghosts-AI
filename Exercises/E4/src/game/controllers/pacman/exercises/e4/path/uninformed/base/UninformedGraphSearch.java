@@ -136,6 +136,7 @@ public abstract class UninformedGraphSearch<PATH_FINDER_CONFIG> extends Uninform
 		//       This should implement SINGLE STEP of the search algorithm!
 
 		// Graph-Search algorithm template:
+		//  -- you can lookup the pseudo-cose here: http://ktiml.mff.cuni.cz/~bartak/ui/lectures/lecture03eng.pdf
 		
 		//  -- uninformed graph search strategy is implemented via
 		//  ---- createCloseList() ~ storage for expanded nodes
